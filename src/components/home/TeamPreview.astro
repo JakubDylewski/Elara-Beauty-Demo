@@ -5,7 +5,7 @@ import { team } from "../../data/team";
 const preview = team.slice(0, 3);
 ---
 
-<section class="relative mt-16">
+<section class="relative mt-16 overflow-x-hidden" data-team-section>
   <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
   <div class="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
     <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Zespół</h2>
@@ -13,9 +13,11 @@ const preview = team.slice(0, 3);
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       {preview.map((member, index) => (
         <div class="text-center" data-cascade style={`transition-delay: ${index * 80}ms`}>
-          <ImagePlaceholder label={member.name} aspect="aspect-[4/5]" tone="blush" />
-          <p class="mt-4 font-serif text-lg font-semibold text-graphite">{member.name}</p>
-          <p class="text-sm text-graphite-soft">{member.specialization}</p>
+          <div data-team-card data-index={index}>
+            <ImagePlaceholder label={member.name} aspect="aspect-[4/5]" tone="blush" />
+            <p class="mt-4 font-serif text-lg font-semibold text-graphite">{member.name}</p>
+            <p class="text-sm text-graphite-soft">{member.specialization}</p>
+          </div>
         </div>
       ))}
     </div>
@@ -27,3 +29,100 @@ const preview = team.slice(0, 3);
     </div>
   </div>
 </section>
+
+<style>
+  @media (max-width: 639px) {
+    [data-team-section] [data-cascade] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    [data-team-card] {
+      opacity: 0;
+      transition: opacity 450ms ease-out, transform 450ms ease-out;
+    }
+
+    [data-team-card][data-index="0"] {
+      transform: translate3d(-60px, 0, 0);
+    }
+
+    [data-team-card][data-index="1"] {
+      transform: translate3d(0, 60px, 0);
+    }
+
+    [data-team-card][data-index="2"] {
+      transform: translate3d(60px, 0, 0);
+    }
+
+    [data-cascade].is-visible [data-team-card] {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-team-card][data-index] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector("[data-team-section]");
+  const cards = Array.from(document.querySelectorAll("[data-team-card]"));
+
+  if (section instanceof HTMLElement && cards.length > 0) {
+    const desktopQuery = window.matchMedia("(min-width: 640px)");
+    let inView = false;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        inView = entries[0]?.isIntersecting ?? false;
+        cards.forEach((el) => {
+          if (el instanceof HTMLElement) {
+            el.style.willChange = inView && desktopQuery.matches ? "transform" : "";
+          }
+        });
+      },
+      { rootMargin: "50% 0px 50% 0px" }
+    );
+    observer.observe(section);
+
+    window.elaraMotion?.register(({ reducedMotion }) => {
+      if (reducedMotion) {
+        cards.forEach((el) => {
+          if (!(el instanceof HTMLElement)) return;
+          el.style.transform = "";
+          el.style.willChange = "";
+        });
+        return;
+      }
+      if (!desktopQuery.matches) {
+        cards.forEach((el) => {
+          if (el instanceof HTMLElement && el.style.transform) el.style.transform = "";
+        });
+        return;
+      }
+      if (!inView) return;
+
+      const rect = section.getBoundingClientRect();
+      const ih = window.innerHeight;
+      const p = Math.min(1, Math.max(0, (ih * 0.85 - rect.top) / (ih * 0.5)));
+
+      cards.forEach((el) => {
+        if (!(el instanceof HTMLElement)) return;
+        const index = Number(el.dataset.index);
+        if (index === 0) {
+          el.style.transform = `translate3d(${-140 * p}px, 0, 0)`;
+        } else if (index === 2) {
+          el.style.transform = `translate3d(${140 * p}px, 0, 0)`;
+        } else {
+          el.style.transform = `translate3d(0, ${-120 * p}px, 0)`;
+        }
+      });
+    });
+  }
+</script>
