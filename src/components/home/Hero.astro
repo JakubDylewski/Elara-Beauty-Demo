@@ -34,17 +34,19 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
 
     <div class="lg:col-span-2">
       <div
-        class="mx-auto grid max-h-[38vh] max-w-sm grid-cols-2 gap-4 lg:max-h-none lg:max-w-none"
+        class="mx-auto flex max-h-[38vh] max-w-sm flex-col items-center gap-4 lg:max-h-none lg:max-w-none"
         data-hero-mosaic
       >
-        <div class="col-span-2" data-hero-tile="a">
+        <div class="w-[60%]" data-hero-tile="a">
           <ImagePlaceholder label="Pielęgnacja twarzy · relaks" aspect="aspect-[4/5]" tone="blush" class="shadow-sm" />
         </div>
-        <div data-hero-tile="b">
-          <ImagePlaceholder label="Stylizacja paznokci" aspect="aspect-square" tone="blush" class="shadow-sm" />
-        </div>
-        <div data-hero-tile="c" class="lg:translate-y-6">
-          <ImagePlaceholder label="Brwi i rzęsy" aspect="aspect-square" tone="blush" class="shadow-sm" />
+        <div class="grid w-full grid-cols-2 gap-4">
+          <div data-hero-tile="b">
+            <ImagePlaceholder label="Stylizacja paznokci" aspect="aspect-square" tone="blush" class="shadow-sm" />
+          </div>
+          <div data-hero-tile="c" class="translate-y-6">
+            <ImagePlaceholder label="Brwi i rzęsy" aspect="aspect-square" tone="blush" class="shadow-sm" />
+          </div>
         </div>
       </div>
     </div>

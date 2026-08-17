@@ -46,25 +46,27 @@
 }
 
 /* 12.7 — kaskadowe wejścia sekcji i elementów siatek */
-.reveal {
+.reveal,
+[data-cascade] {
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 450ms ease-out, transform 450ms ease-out;
   transition-delay: var(--reveal-delay, 0ms);
 }
 
-.reveal.is-visible {
+.reveal.is-visible,
+[data-cascade].is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* 12.6 — przypięta sekcja kategorii: fallback bez ruchu */
 @media (prefers-reduced-motion: reduce) {
-  [data-sticky-container] {
+  [data-pinned-container] {
     height: auto !important;
   }
 
-  [data-sticky-panel] {
+  [data-pinned-panel] {
     position: static !important;
     height: auto !important;
   }
@@ -72,7 +74,8 @@
 
 /* 12.8 — wymóg twardy: brak ruchu przy prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  [data-cascade] {
     opacity: 1;
     transform: none;
     transition: none;

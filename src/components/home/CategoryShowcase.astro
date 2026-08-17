@@ -4,7 +4,7 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
 import { categories } from "../../data/categories";
 ---
 
-<section class="bg-cream">
+<section class="mt-16 bg-cream">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="py-16 text-center sm:py-20 lg:pb-0">
       <DotLine class="justify-center" />
@@ -16,10 +16,15 @@ import { categories } from "../../data/categories";
       <div
         class="sticky flex items-center gap-10 overflow-hidden py-10"
         style="top: 6.5rem; height: min(calc(100vh - 6.5rem), 640px);"
+        data-pinned-panel
       >
         <div class="relative h-full w-1/2 overflow-hidden rounded-2xl">
           {categories.map((category, index) => (
-            <div class="pinned-image absolute inset-0" data-pinned-image data-index={index}>
+            <div
+              class:list={["pinned-image absolute inset-0", { "is-active": index === 0 }]}
+              data-pinned-image
+              data-index={index}
+            >
               <ImagePlaceholder
                 label={category.name}
                 aspect="h-full"
@@ -36,7 +41,10 @@ import { categories } from "../../data/categories";
               <li>
                 <a
                   href={`/uslugi/${category.slug}`}
-                  class="pinned-item flex items-center justify-between gap-4 rounded-xl px-4 py-4 transition-[transform,opacity,color] duration-200"
+                  class:list={[
+                    "pinned-item flex items-center justify-between gap-4 rounded-xl px-4 py-4 transition-[transform,opacity,color] duration-200",
+                    { "is-active": index === 0 },
+                  ]}
                   data-pinned-item
                   data-index={index}
                 >
@@ -81,3 +89,58 @@ import { categories } from "../../data/categories";
     </div>
   </div>
 </section>
+
+<style>
+  .pinned-image {
+    opacity: 0;
+    transition: opacity 250ms ease;
+  }
+
+  .pinned-image.is-active {
+    opacity: 1;
+  }
+
+  .pinned-item.is-active {
+    color: var(--color-copper-dark);
+    transform: translateX(8px);
+  }
+
+  .pinned-item.is-active .pinned-dot {
+    background-color: var(--color-copper);
+    box-shadow: 0 0 0 4px rgb(181 101 74 / 0.18);
+  }
+</style>
+
+<script>
+  const container = document.querySelector("[data-pinned-container]");
+  const images = Array.from(document.querySelectorAll("[data-pinned-image]"));
+  const items = Array.from(document.querySelectorAll("[data-pinned-item]"));
+  const progressBar = document.querySelector("[data-pinned-progress]");
+
+  if (container instanceof HTMLElement && items.length > 0) {
+    let lastActive = 0;
+
+    function setActive(index) {
+      if (index === lastActive) return;
+      lastActive = index;
+      images.forEach((el) => el.classList.toggle("is-active", Number(el.dataset.index) === index));
+      items.forEach((el) => el.classList.toggle("is-active", Number(el.dataset.index) === index));
+    }
+
+    window.elaraMotion?.register(({ reducedMotion }) => {
+      if (reducedMotion || window.innerWidth < 1024) return;
+
+      const rect = container.getBoundingClientRect();
+      const maxScroll = container.offsetHeight - window.innerHeight;
+      const scrolled = -rect.top;
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrolled / maxScroll)) : 0;
+
+      const activeIndex = Math.min(items.length - 1, Math.floor(progress * items.length));
+      setActive(activeIndex);
+
+      if (progressBar instanceof HTMLElement) {
+        progressBar.style.height = `${Math.round(progress * 100)}%`;
+      }
+    });
+  }
+</script>
