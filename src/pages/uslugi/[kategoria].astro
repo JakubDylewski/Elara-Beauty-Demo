@@ -22,8 +22,9 @@ const items = services.filter((service) => service.categorySlug === category.slu
   title={category.name}
   description={`${category.name} w ELARA Gdynia — ceny, czas trwania i rezerwacja online. ${content.intro}`}
 >
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-16">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-16">
       <nav class="text-sm text-graphite-soft" aria-label="Okruszki">
         <a href="/uslugi" class="hover:text-copper-dark transition-colors">Usługi</a>
         <span class="mx-2">/</span>
@@ -36,8 +37,9 @@ const items = services.filter((service) => service.categorySlug === category.slu
     </div>
   </section>
 
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 pb-14 sm:px-6">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 pb-14 sm:px-6">
       <ul class="divide-y divide-graphite/10 border-t border-graphite/10">
         {items.map((service) => (
           <li class="flex flex-wrap items-center justify-between gap-3 py-4">
@@ -62,8 +64,9 @@ const items = services.filter((service) => service.categorySlug === category.slu
     </div>
   </section>
 
-  <section class="bg-blush">
-    <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
       <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Nasze prace</h2>
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {content.gallery.map((label) => (
@@ -73,8 +76,9 @@ const items = services.filter((service) => service.categorySlug === category.slu
     </div>
   </section>
 
-  <section class="bg-cream">
-    <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
       <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Pytania i odpowiedzi</h2>
       <div class="mt-10 space-y-6">
         {content.faq.map((item) => (
@@ -87,8 +91,9 @@ const items = services.filter((service) => service.categorySlug === category.slu
     </div>
   </section>
 
-  <section class="bg-blush">
-    <div class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
       <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">Umów się na {category.name.toLowerCase()}</h2>
       <a
         href="/kontakt"

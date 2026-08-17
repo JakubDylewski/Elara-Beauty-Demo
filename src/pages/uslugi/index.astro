@@ -12,8 +12,9 @@ const groups = categories.map((category) => ({
 ---
 
 <Base title="Cennik i usługi" description="Pełny cennik usług ELARA — paznokcie, rzęsy, brwi, twarz, ciało i makijaż. Znajdź usługę i zarezerwuj wizytę.">
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
       <DotLine class="justify-center" />
       <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Cennik</h1>
       <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
@@ -34,8 +35,9 @@ const groups = categories.map((category) => ({
     </div>
   </div>
 
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <p id="no-results" class="hidden py-10 text-center text-graphite-soft">
         Brak usług pasujących do wyszukiwania. Spróbuj innego słowa albo{" "}
         <a href="/kontakt" class="font-medium text-copper-dark hover:text-copper transition-colors">zapytaj nas bezpośrednio</a>.

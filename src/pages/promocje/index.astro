@@ -5,8 +5,9 @@ import { promos, daysUntil } from "../../data/promo";
 ---
 
 <Base title="Promocje" description="Aktualne promocje ELARA Instytut Urody — sprawdź, co teraz się opłaca i zarezerwuj wizytę w niższej cenie.">
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
       <DotLine class="justify-center" />
       <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Promocje</h1>
       <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
@@ -15,8 +16,9 @@ import { promos, daysUntil } from "../../data/promo";
     </div>
   </section>
 
-  <section class="bg-cream">
-    <div class="mx-auto max-w-4xl px-4 pb-16 sm:px-6 sm:pb-20">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 pb-16 sm:px-6 sm:pb-20">
       <div class="space-y-6">
         {promos.map((promo) => {
           const daysLeft = daysUntil(promo.endDate);

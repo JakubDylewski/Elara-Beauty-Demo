@@ -45,6 +45,13 @@
   }
 }
 
+/* POPRAWKA 12.4.A — warstwa tła sekcji, wyjęta spod nici (nić leży NAD tłem, POD treścią) */
+.thread-section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
 /* 12.7 — kaskadowe wejścia sekcji i elementów siatek */
 .reveal,
 [data-cascade] {
