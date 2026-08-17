@@ -1,0 +1,94 @@
+---
+const items = [
+  "MANICURE HYBRYDOWY",
+  "LAMINACJA BRWI",
+  "LIFTING RZĘS",
+  "OCZYSZCZANIE WODOROWE",
+  "MASAŻ GORĄCYMI KAMIENIAMI",
+  "PRZEDŁUŻANIE RZĘS",
+  "HENNA PUDROWA",
+  "DEPILACJA WOSKIEM",
+  "MAKIJAŻ OKOLICZNOŚCIOWY",
+];
+---
+
+<div class="overflow-hidden bg-blush" aria-hidden="true">
+  <div class="flex items-center whitespace-nowrap py-3 sm:py-3.5" data-marquee-track>
+    {[0, 1].map(() => (
+      <div class="flex items-center">
+        {items.map((item) => (
+          <span class="flex items-center gap-3 px-3 text-xs font-semibold tracking-widest text-copper-dark sm:text-sm">
+            {item}
+            <span class="h-1.5 w-1.5 rounded-full bg-copper"></span>
+          </span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  [data-marquee-track] {
+    width: max-content;
+    animation: marquee-scroll 40s linear infinite;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-marquee-track] {
+      animation: none;
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<script>
+  const track = document.querySelector("[data-marquee-track]");
+
+  if (track instanceof HTMLElement && !window.elaraMotion?.reducedMotion) {
+    const lowPower = window.elaraMotion?.lowPower;
+
+    let half = track.scrollWidth / 2;
+    let baseSpeed = half / 40;
+    let position = 0;
+    let speedMult = 1;
+    let lastScrollY = window.scrollY;
+    let lastTime = performance.now();
+
+    track.style.animation = "none";
+
+    window.addEventListener(
+      "resize",
+      () => {
+        half = track.scrollWidth / 2;
+        baseSpeed = half / 40;
+      },
+      { passive: true }
+    );
+
+    window.elaraMotion?.register(({ scrollY }) => {
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      if (!lowPower) {
+        const velocity = dt > 0 ? Math.abs(scrollY - lastScrollY) / dt : 0;
+        const targetMult = 1 + Math.min(velocity / 800, 1) * 1.5;
+        speedMult += (targetMult - speedMult) * Math.min(dt * 6, 1);
+      }
+      lastScrollY = scrollY;
+
+      position -= baseSpeed * speedMult * dt;
+      if (half > 0 && position <= -half) position += half;
+      track.style.transform = `translateX(${position}px)`;
+    });
+  }
+</script>

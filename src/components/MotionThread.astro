@@ -1,0 +1,128 @@
+---
+---
+
+<svg
+  id="elara-thread"
+  class="absolute inset-0 -z-10"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+>
+  <defs>
+    <filter id="thread-dot-glow" x="-200%" y="-200%" width="500%" height="500%">
+      <feGaussianBlur stdDeviation="3" />
+    </filter>
+    <filter id="thread-thick-blur" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" />
+    </filter>
+  </defs>
+  <path id="thread-thick" fill="none" stroke="#B5654A" stroke-linecap="round" opacity="0" filter="url(#thread-thick-blur)"></path>
+  <path id="thread-line" fill="none" stroke="#B5654A" stroke-width="1.5"></path>
+  <circle id="thread-glow-dot" fill="#B5654A" opacity="0.25" filter="url(#thread-dot-glow)"></circle>
+  <circle id="thread-dot" fill="#B5654A"></circle>
+</svg>
+
+<script>
+  const svg = document.getElementById("elara-thread");
+  const wrapper = document.getElementById("page-thread-wrapper");
+  const linePath = document.getElementById("thread-line");
+  const thickPath = document.getElementById("thread-thick");
+  const dot = document.getElementById("thread-dot");
+  const glowDot = document.getElementById("thread-glow-dot");
+
+  if (
+    svg instanceof SVGSVGElement &&
+    wrapper instanceof HTMLElement &&
+    linePath instanceof SVGPathElement &&
+    thickPath instanceof SVGPathElement &&
+    dot instanceof SVGCircleElement &&
+    glowDot instanceof SVGCircleElement
+  ) {
+    const WINDOW_LEN = 140;
+    let totalLength = 0;
+    let lastProgress = 0;
+
+    function buildPath() {
+      const mobile = window.matchMedia("(max-width: 767px)").matches;
+      const width = Math.max(wrapper.clientWidth, 1);
+      const height = Math.max(wrapper.scrollHeight, 1);
+
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+      const amplitude = width * (mobile ? 0.08 : 0.14);
+      const wavelength = window.innerHeight * 0.9;
+      const halfWave = Math.max(wavelength / 2, 1);
+      const centerX = width / 2;
+
+      let d = `M ${centerX} 0`;
+      let prevX = centerX;
+      let prevY = 0;
+      let y = 0;
+      let dir = 1;
+
+      while (y < height) {
+        const nextY = Math.min(y + halfWave, height);
+        const reachedEdge = y + halfWave > height;
+        const targetX = reachedEdge ? centerX : centerX + amplitude * dir;
+        const midY = prevY + (nextY - prevY) / 2;
+        d += ` C ${prevX} ${midY}, ${targetX} ${midY}, ${targetX} ${nextY}`;
+        prevX = targetX;
+        prevY = nextY;
+        y = nextY;
+        dir *= -1;
+      }
+
+      linePath.setAttribute("d", d);
+      thickPath.setAttribute("d", d);
+      linePath.setAttribute("stroke-width", mobile ? "1" : "1.5");
+      thickPath.setAttribute("stroke-width", mobile ? "3" : "4");
+      dot.setAttribute("r", mobile ? "3.5" : "4.5");
+      glowDot.setAttribute("r", mobile ? "7" : "9");
+
+      totalLength = linePath.getTotalLength();
+      thickPath.setAttribute("stroke-dasharray", `${WINDOW_LEN} ${Math.max(totalLength - WINDOW_LEN, 0)}`);
+    }
+
+    function setProgress(progress) {
+      if (!totalLength) return;
+      const clamped = Math.min(Math.max(progress, 0), 1);
+      const point = linePath.getPointAtLength(clamped * totalLength);
+      dot.setAttribute("cx", String(point.x));
+      dot.setAttribute("cy", String(point.y));
+      glowDot.setAttribute("cx", String(point.x));
+      glowDot.setAttribute("cy", String(point.y));
+      const offset = totalLength - clamped * totalLength + WINDOW_LEN / 2;
+      thickPath.setAttribute("stroke-dashoffset", String(offset));
+    }
+
+    buildPath();
+    setProgress(0);
+
+    const reducedMotion = window.elaraMotion?.reducedMotion;
+    const lowPower = window.elaraMotion?.lowPower;
+
+    if (!reducedMotion && !lowPower) {
+      thickPath.style.opacity = "1";
+    }
+
+    let resizeTimer;
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          buildPath();
+          setProgress(lastProgress);
+        }, 150);
+      },
+      { passive: true }
+    );
+
+    if (!reducedMotion) {
+      window.elaraMotion?.register(({ scrollY }) => {
+        const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+        lastProgress = scrollY / max;
+        setProgress(lastProgress);
+      });
+    }
+  }
+</script>

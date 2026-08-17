@@ -3,9 +3,9 @@ import DotLine from "../DotLine.astro";
 import ImagePlaceholder from "../ImagePlaceholder.astro";
 ---
 
-<section class="bg-cream">
+<section class="hero relative isolate overflow-x-hidden bg-cream lg:max-h-[82vh] lg:overflow-hidden" data-hero>
   <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-5 lg:gap-12 lg:py-24">
-    <div class="lg:col-span-3">
+    <div class="lg:col-span-3" data-hero-text>
       <DotLine />
       <p class="mt-4 text-sm font-medium uppercase tracking-widest text-graphite-soft">
         Instytut Urody · Gdynia Świętojańska
@@ -33,7 +33,78 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
     </div>
 
     <div class="lg:col-span-2">
-      <ImagePlaceholder label="Wnętrze ELARA · klientka w relaksie" aspect="aspect-[4/5]" tone="blush" />
+      <div
+        class="mx-auto grid max-h-[38vh] max-w-sm grid-cols-2 gap-4 lg:max-h-none lg:max-w-none"
+        data-hero-mosaic
+      >
+        <div class="col-span-2" data-hero-tile="a">
+          <ImagePlaceholder label="Pielęgnacja twarzy · relaks" aspect="aspect-[4/5]" tone="blush" class="shadow-sm" />
+        </div>
+        <div data-hero-tile="b">
+          <ImagePlaceholder label="Stylizacja paznokci" aspect="aspect-square" tone="blush" class="shadow-sm" />
+        </div>
+        <div data-hero-tile="c" class="lg:translate-y-6">
+          <ImagePlaceholder label="Brwi i rzęsy" aspect="aspect-square" tone="blush" class="shadow-sm" />
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  const heroText = document.querySelector("[data-hero-text]");
+  const tileA = document.querySelector('[data-hero-tile="a"]');
+  const tileB = document.querySelector('[data-hero-tile="b"]');
+  const tileC = document.querySelector('[data-hero-tile="c"]');
+
+  if (
+    heroText instanceof HTMLElement &&
+    tileA instanceof HTMLElement &&
+    tileB instanceof HTMLElement &&
+    tileC instanceof HTMLElement
+  ) {
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+
+    function easeOutQuad(p) {
+      return p * (2 - p);
+    }
+
+    function resetEl(el) {
+      el.style.willChange = "";
+      el.style.transform = "";
+      el.style.opacity = "";
+    }
+
+    function updateTile(el, multiplier, eased, opacity, scale, active) {
+      el.style.willChange = active ? "transform, opacity" : "";
+      el.style.transform = `translate3d(${260 * multiplier * eased}px, 0, 0) scale(${scale})`;
+      el.style.opacity = String(opacity);
+    }
+
+    window.elaraMotion?.register(({ scrollY, reducedMotion }) => {
+      if (reducedMotion) {
+        resetEl(heroText);
+        resetEl(tileA);
+        resetEl(tileB);
+        resetEl(tileC);
+        return;
+      }
+
+      const range = window.innerHeight * 0.65;
+      const p = Math.min(Math.max(scrollY / range, 0), 1);
+      const eased = easeOutQuad(p);
+      const active = p > 0 && p < 1;
+      const textDistance = desktopQuery.matches ? -220 : -120;
+      const opacity = 1 - eased * 0.85;
+      const scale = 1 - eased * 0.06;
+
+      heroText.style.willChange = active ? "transform, opacity" : "";
+      heroText.style.transform = `translate3d(${textDistance * eased}px, 0, 0)`;
+      heroText.style.opacity = String(opacity);
+
+      updateTile(tileA, 1, eased, opacity, scale, active);
+      updateTile(tileB, 0.72, eased, opacity, scale, active);
+      updateTile(tileC, 1.28, eased, opacity, scale, active);
+    });
+  }
+</script>

@@ -10,8 +10,8 @@ const preview = team.slice(0, 3);
     <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Zespół</h2>
 
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
-      {preview.map((member) => (
-        <div class="text-center">
+      {preview.map((member, index) => (
+        <div class="text-center" data-cascade style={`transition-delay: ${index * 80}ms`}>
           <ImagePlaceholder label={member.name} aspect="aspect-[4/5]" tone="blush" />
           <p class="mt-4 font-serif text-lg font-semibold text-graphite">{member.name}</p>
           <p class="text-sm text-graphite-soft">{member.specialization}</p>

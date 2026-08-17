@@ -1,0 +1,83 @@
+---
+import DotLine from "../DotLine.astro";
+import ImagePlaceholder from "../ImagePlaceholder.astro";
+import { categories } from "../../data/categories";
+---
+
+<section class="bg-cream">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="py-16 text-center sm:py-20 lg:pb-0">
+      <DotLine class="justify-center" />
+      <h2 class="mt-4 font-serif text-3xl font-semibold text-graphite sm:text-4xl">Usługi</h2>
+    </div>
+
+    <!-- Desktop: pinned showcase -->
+    <div class="hidden lg:block" data-pinned-container style="height: 300vh;">
+      <div
+        class="sticky flex items-center gap-10 overflow-hidden py-10"
+        style="top: 6.5rem; height: min(calc(100vh - 6.5rem), 640px);"
+      >
+        <div class="relative h-full w-1/2 overflow-hidden rounded-2xl">
+          {categories.map((category, index) => (
+            <div class="pinned-image absolute inset-0" data-pinned-image data-index={index}>
+              <ImagePlaceholder
+                label={category.name}
+                aspect="h-full"
+                tone={index % 2 === 0 ? "blush" : "cream"}
+                class="h-full w-full"
+              />
+            </div>
+          ))}
+        </div>
+
+        <div class="relative w-1/2 pr-8">
+          <ul>
+            {categories.map((category, index) => (
+              <li>
+                <a
+                  href={`/uslugi/${category.slug}`}
+                  class="pinned-item flex items-center justify-between gap-4 rounded-xl px-4 py-4 transition-[transform,opacity,color] duration-200"
+                  data-pinned-item
+                  data-index={index}
+                >
+                  <span class="flex items-center gap-3">
+                    <span class="pinned-dot h-1.5 w-1.5 shrink-0 rounded-full bg-copper" aria-hidden="true"></span>
+                    <span class="font-serif text-2xl font-semibold">{category.name}</span>
+                  </span>
+                  <span class="text-sm font-medium text-graphite-soft">od {category.priceFrom} zł</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <div class="absolute right-0 top-0 h-full w-[3px] rounded-full bg-graphite/10">
+            <div class="w-full rounded-full bg-copper" data-pinned-progress style="height: 0%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile / tablet: cascading tiles, no pinning -->
+    <div class="grid gap-4 pb-16 sm:grid-cols-2 lg:hidden">
+      {categories.map((category, index) => (
+        <a
+          href={`/uslugi/${category.slug}`}
+          class="group rounded-2xl border border-graphite/10 bg-blush/40 p-6 transition-colors hover:border-copper/40 hover:bg-blush"
+          data-cascade
+          style={`transition-delay: ${Math.min(index * 80, 480)}ms`}
+        >
+          <p class="font-serif text-xl font-semibold text-graphite group-hover:text-copper-dark transition-colors">
+            {category.name}
+          </p>
+          <p class="mt-2 text-sm font-medium text-copper-dark">od {category.priceFrom} zł</p>
+        </a>
+      ))}
+    </div>
+
+    <div class="pb-16 text-center lg:pb-20">
+      <a href="/uslugi" class="font-semibold text-copper-dark hover:text-copper transition-colors">
+        Zobacz pełny cennik →
+      </a>
+    </div>
+  </div>
+</section>

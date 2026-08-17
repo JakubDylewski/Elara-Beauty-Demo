@@ -1,223 +1,344 @@
-# ELARA — INSTYTUT URODY · SPECYFIKACJA DEMO (GRUPA 3: SALON BEAUTY)
+# ELARA — INSTYTUT URODY · SPECYFIKACJA DEMO v2 (GRUPA 3: SALON BEAUTY)
 
-> **Czym jest ten dokument:** kompletna specyfikacja strony-demo dla fikcyjnego instytutu urody, budowanej jako drugi produkt demonstracyjny agencji Connectiva (pierwszy: Klinika Aurelia — medycyna estetyczna). Metodyka identyczna jak przy Aurelii: budowa etapami w Claude Code, jeden etap naraz, commit po każdym, audyt mobilny jako twardy wymóg.
+> **TA WERSJA ZASTĘPUJE WSZYSTKIE POPRZEDNIE.** Jeden plik, jedna prawda. Jeśli w projekcie jest starszy `ELARA-DEMO-SPEC.md` lub osobna „sekcja 12" — usuń je i zostaw wyłącznie ten dokument.
 >
-> **Grupa docelowa klientów agencji:** salony beauty i instytuty urody — wielousługowe (paznokcie, rzęsy, brwi, kosmetyka twarzy, depilacja, masaże), z zespołem kilku specjalistek. Z listy leadów: Mi Bella, Instytut BeYOUtiful, House of Beauty, Balola, Blossom, Essence Beauty, Cosmetic Masters.
+> **Czym jest:** kompletna specyfikacja strony-demo fikcyjnego instytutu urody — drugie demo agencji Connectiva (pierwsze: Klinika Aurelia, medycyna estetyczna). Metodyka identyczna: budowa etapami w Claude Code, jeden etap naraz, `git commit` po każdym, audyt mobilny jako twardy wymóg.
 >
-> **Podstawa projektowa:** analiza strony J'ADORE Instytut (czołówka rankingów, wzorzec premium w tej niszy) + rankingi salonów 2026 + wcześniejszy research rynku (Lokal360, WebyJuice — produktyzacja „strona + rezerwacja bez prowizji").
+> **Dla kogo to demo:** salony beauty i instytuty urody — wielousługowe (paznokcie, rzęsy, brwi, kosmetyka twarzy, depilacja, masaże), zespół kilku specjalistek.
+>
+> **Stan budowy:** etapy 1–5 UKOŃCZONE. Do zrobienia: 6–11.
 
 ---
 
-## 0. KLUCZOWE RÓŻNICE WZGLĘDEM AURELII (przeczytaj zanim zbudujesz cokolwiek)
+## 0. KLUCZOWE RÓŻNICE WZGLĘDEM AURELII
 
 | | AURELIA (klinika lekarska) | ELARA (salon beauty) |
 |---|---|---|
-| Klientka | NIE ZNA zabiegów, ma problem, decyduje tygodniami | WIE czego chce („hybryda", „laminacja brwi"), decyduje w minuty |
+| Klientka | NIE ZNA zabiegów, ma problem, decyduje tygodniami | WIE czego chce („hybryda"), decyduje w minuty |
 | Ścieżka | problem → edukacja → konsultacja → zapis | usługa → cena → termin → rezerwacja |
-| Serce strony | moduł „Dobierz zabieg" + strony edukacyjne | **CENNIK z filtrem na żywo** + szybka rezerwacja |
-| Prawo | zakaz reklamy świadczeń (art. 14) — tylko informacja | **reklama DOZWOLONA** — promocje, pakiety, rabaty, zegary |
-| Ton | spokojny, kliniczny, edukacyjny | ciepły, energiczny, sprzedażowy (ale wciąż premium, nie bazarowy) |
-| Częstotliwość wizyt | raz na kilka miesięcy | co 3–4 tygodnie (paznokcie, brwi) — stała klientka |
-| Produkty dodatkowe | — | **vouchery prezentowe, pakiety/karnety, eventy (panieńskie)** |
-| Rezerwacja | formularz + konsultacja | formularz z wyborem usługi (docelowo: widżet Booksy klienta) |
+| Serce strony | moduł „Dobierz zabieg" + strony edukacyjne | **cennik z filtrem na żywo** + szybka rezerwacja |
+| Prawo | zakaz reklamy świadczeń (art. 14) | **reklama DOZWOLONA** — promocje, rabaty, odliczanie |
+| Ton | spokojny, kliniczny, edukacyjny | ciepły, energiczny, sprzedażowy (wciąż premium) |
+| Częstotliwość wizyt | raz na kilka miesięcy | co 3–4 tygodnie — stała klientka |
+| Produkty dodatkowe | — | **vouchery, pakiety, eventy (panieńskie)** |
+| Hero | typograficzne (pacjentka CZYTA) | **zdjęciowe, w ruchu** (klientka OGLĄDA) |
 
-**Zasada nadrzędna:** klientka ma znaleźć usługę, cenę i drogę do rezerwacji w mniej niż 30 sekund. Wszystko inne jest dodatkiem.
+**Zasada nadrzędna:** klientka ma znaleźć usługę, cenę i drogę do rezerwacji w mniej niż 30 sekund.
 
 ---
 
-## 1. MARKA (fikcyjna)
+## 1. MARKA
 
-- **Nazwa:** ELARA — Instytut Urody *(nazwa dystynktywna; przed użyciem u klienta sprawdzić kolizje lokalne)*
-- **Miasto:** Gdynia, ul. Świętojańska 82 (fikcyjny adres na głównej ulicy handlowej — teren sprzedażowy Connectivy: Trójmiasto)
-- **Telefon demo:** 512 340 219 · e-mail: rezerwacje@elara-beauty.pl (fikcyjne)
+- **Nazwa:** ELARA — Instytut Urody
+- **Miasto:** Gdynia, ul. Świętojańska 82 (fikcyjny adres)
+- **Telefon demo:** 512 340 219 · e-mail: rezerwacje@elara-beauty.pl
 - **Claim:** „Twój czas na piękno."
-- **Charakter:** ciepły, kobiecy, nowoczesny premium — NIE kliniczny (to różnica vs Aurelia), NIE różowo-cukierkowy (to różnica vs tanie salony)
+- **Charakter:** ciepły, kobiecy, nowoczesny premium. NIE kliniczny (vs Aurelia), NIE różowo-cukierkowy (vs tanie salony).
 
-### 1.1 Paleta (INNA niż Aurelia — żeby portfolio pokazywało zakres)
-- `--cream` #FBF7F2 — tło główne (ciepła kość słoniowa)
-- `--blush` #F2E2DA — tło sekcji naprzemiennych (pudrowy, przygaszony róż)
-- `--copper` #B5654A — akcent (miedź/terakota): przyciski, linki, detale
-- `--copper-dark` #8F4E38 — hover, etykiety (kontrast ≥4.5:1 na cream)
+### 1.1 Paleta
+- `--cream` #FBF7F2 — tło główne
+- `--blush` #F2E2DA — tło sekcji naprzemiennych
+- `--copper` #B5654A — akcent: przyciski, linki, **nić**
+- `--copper-dark` #8F4E38 — hover, etykiety (kontrast ≥4.5:1)
 - `--graphite` #2A2622 — tekst główny
 - `--graphite-soft` #6B615A — tekst drugorzędny
-- Sygnatura graficzna: **cienka pozioma linia z kropką** (zamiast złotego łuku Aurelii) — minimalistyczny „akcent oddechu" przy overline'ach
 
 ### 1.2 Typografia
-- Nagłówki: **Fraunces** (fontsource; serif o ciepłym, współczesnym charakterze — wyraźnie inny niż Cormorant Aurelii)
-- Tekst: **Figtree** (fontsource; czysty, przyjazny sans)
-- Skala jak w Aurelii (clamp, mobile-first)
+- Nagłówki: **Fraunces** (fontsource)
+- Tekst: **Figtree** (fontsource)
+- Skala `clamp()`, mobile-first
 
-### 1.3 Stack i infrastruktura (identyczne jak Aurelia)
+### 1.3 Sygnatura marki: LINIA Z KROPKĄ
+Cienka pozioma linia zakończona (lub przecięta) małą kropką, kolor `--copper`. Komponent `DotLine.astro`.
+Występuje: przy overline'ach sekcji, jako separator w pasie usług, w logo — **oraz jako „nić" przewijania (sekcja 12.4), która jest rozwinięciem tej samej sygnatury na całą stronę.**
+
+### 1.4 Stack i infrastruktura
 - Astro 5 + Tailwind CSS 4 + waniliowy JS, zero bibliotek UI
-- Nowy folder lokalny: `C:\Users\jakdy\Documents\Elara Beauty Demo`
-- Nowe repozytorium GitHub: `Elara-Beauty-Demo` (branch main)
-- Nowy projekt Cloudflare **Pages** (Connect to Git → Astro → `npm run build` → `dist`)
-- Zdjęcia: `public/images/` (wyjątek hero → `src/assets/` dla srcset)
-- Rytm pracy: jeden etap → sprawdzenie → commit → push → następny
+- Folder: `C:\Users\jakdy\Documents\Elara Instytut Urody Demo`
+- GitHub: `Elara-Beauty-Demo` (main) · Cloudflare **Pages** → `elara-beauty-demo.pages.dev`
+- Zdjęcia: `public/images/` (wyjątek: kafelki hero → `src/assets/` dla srcset)
+- Rytm: jeden etap → sprawdzenie → commit → push → następny
 
 ---
 
 ## 2. ARCHITEKTURA STRON
 
 ```
-/                         strona główna
-/uslugi                   CENNIK-KATALOG z filtrem na żywo (serce strony)
-/uslugi/[kategoria]       6 stron kategorii (twarz, paznokcie, rzęsy-brwi, depilacja, cialo-masaze, makijaz)
-/vouchery                 vouchery prezentowe + pakiety (produkt, nie dodatek)
-/promocje                 aktualne promocje (mechanizm sezonowy)
-/zespol                   zespół z przypisaniem specjalizacji
-/o-nas                    wnętrza, filozofia, marki kosmetyków
-/pierwsza-wizyta          jak wygląda wizyta (wzorzec z Aurelii, lżejszy ton)
-/kontakt                  rezerwacja (formularz z kontekstem) + mapa + godziny
-/jak-pozyskujemy-klientki strona systemu dla właścicielki salonu (manifest sprzedażowy)
-/beauty-[miasto]          lądowiska SEO: Gdynia + dzielnice + Trójmiasto (sekcja 8)
+/                          strona główna
+/uslugi                    cennik-katalog z filtrem na żywo (serce)
+/uslugi/[kategoria]        6 stron kategorii
+/vouchery                  vouchery + pakiety
+/promocje                  aktualne promocje
+/zespol                    zespół z przypisaniem specjalizacji
+/o-nas                     wnętrza, filozofia, marki kosmetyków
+/pierwsza-wizyta           jak wygląda wizyta (lżejszy ton niż Aurelia)
+/kontakt                   rezerwacja (formularz z kontekstem) + mapa
+/jak-pozyskujemy-klientki  manifest systemu dla właścicielki salonu
+/beauty-[slug]             10 lądowisk SEO (sekcja 8)
 ```
 
 ---
 
-## 3. STRONA GŁÓWNA — struktura (wzorce J'ADORE zaadaptowane do jednego salonu)
+## 3. STRONA GŁÓWNA — struktura
 
-Kolejność sekcji (tła naprzemienne cream/blush):
+Kolejność sekcji, tła naprzemienne cream/blush:
 
-**1. Górny pasek** (graphite, jasny tekst): godziny `Pon–Sob 9:00–20:00` · telefon klikalny · przycisk `Zarezerwuj` → /kontakt
+1. **Górny pasek** (graphite): godziny `Pon–Sob 9:00–20:00` · telefon klikalny · `Zarezerwuj`
+2. **HERO** — mozaika trójkątna + efekt ucieczki (sekcja 12)
+3. **Pas nazw usług** (marquee, 12.3)
+4. **Pasek zaufania** (blush): `8 lat w Gdyni` · `4,9/5 — 380 opinii` · `12 000+ zabiegów` · `6 specjalistek` — z licznikami (12.5)
+5. **USŁUGI — 6 kategorii** (cream) z kotwicami cenowymi; na desktopie sekcja przypięta (12.6): Pielęgnacja twarzy `od 150 zł` · Stylizacja paznokci `od 120 zł` · Rzęsy i brwi `od 90 zł` · Depilacja `od 60 zł` · Ciało i masaże `od 180 zł` · Makijaż `od 200 zł`
+6. **„NA KAŻDĄ OKAZJĘ"** (blush) — 4 karty intencji: `Dla siebie` → /uslugi · `Na prezent` → /vouchery · `Na wielkie wyjście` → /uslugi/makijaz · `Na panieński` → /kontakt?cel=event
+7. **PROMOCJA MIESIĄCA** (cream) — etykieta, opis, **odliczanie**, przycisk `Rezerwuję w tej cenie`; dane z `promo.ts`
+8. **GALERIA PRAC** (blush) — 6 zdjęć z podpisami kategorii
+9. **ZESPÓŁ — skrót** (cream) — 3 karty + `Poznaj cały zespół →`
+10. **OPINIE** (blush) — format Google, `Imię N.`, `opinia Google`; treści wymieniają usługi i imiona specjalistek
+11. **VOUCHER — zajawka** (cream) — `Podaruj komuś godzinę dla siebie` + `Skomponuj prezent →`
+12. **CTA końcowe** (blush) — `Twój termin czeka.` + `Zarezerwuj wizytę` + telefon
 
-**2. HERO** (cream) — typograficzny 60/40 jak Aurelia, ale cieplejszy:
-- Overline: `INSTYTUT URODY · GDYNIA ŚWIĘTOJAŃSKA`
-- H1: `Twój czas na piękno.`
-- Sub (1 zdanie): `Paznokcie, rzęsy, twarz i ciało — pod jednym dachem, w rękach specjalistek, które robią to od lat.`
-- JEDEN przycisk: `Zarezerwuj wizytę` + pod spodem drobnym: `lub zadzwoń: 512 340 219`
-- Zdjęcie 4:5 pionowe (srcset z src/assets), wnętrze/klientka w relaksie
-
-**3. Pasek zaufania** (blush): `8 lat w Gdyni` · `4,9/5 — 380 opinii Google` · `12 000+ wykonanych zabiegów` · `6 specjalistek`
-
-**4. USŁUGI — 6 kafelków kategorii** (cream) — zaraz pod zaufaniem, z KOTWICAMI CENOWYMI (wzorzec J'ADORE):
-- Pielęgnacja twarzy `od 150 zł` · Stylizacja paznokci `od 120 zł` · Rzęsy i brwi `od 90 zł` · Depilacja `od 60 zł` · Ciało i masaże `od 180 zł` · Makijaż `od 200 zł`
-- Każdy kafelek klikalny → strona kategorii. Pod siatką: `Zobacz pełny cennik →` /uslugi
-
-**5. „NA KAŻDĄ OKAZJĘ" — 4 karty segmentacji po intencji** (blush) — wzorzec wprost od lidera:
-- `Dla siebie` — zabieg dobrany do Ciebie → /uslugi
-- `Na prezent` — voucher, który zachwyca → /vouchery
-- `Na wielkie wyjście` — makijaż i stylizacja na event → /uslugi/makijaz
-- `Na panieński` — wieczór piękna dla całej ekipy → /kontakt?cel=event
-
-**6. PROMOCJA MIESIĄCA** (cream) — mechanizm, którego Aurelia mieć nie mogła:
-- Wyróżniony pas z etykietą `PROMOCJA MIESIĄCA` + przykład: `Wrzesień: laminacja brwi + henna −20%` + `do końca zostało: [odliczanie dni]` + przycisk `Rezerwuję w tej cenie`
-- Dane promocji w `src/data/promo.ts` (łatwa podmiana co miesiąc — argument sprzedażowy: „strona, którą aktualizujesz w 2 minuty")
-
-**7. METAMORFOZY / GALERIA PRAC** (blush): siatka 6 zdjęć prac (paznokcie, brwi, makijaż) — w beauty pokazuje się PRACE, nie tylko przed/po. Podpis kategorii przy każdym.
-
-**8. ZESPÓŁ — skrót** (cream): 3 karty (zdjęcie, imię, specjalizacja: „Ola — stylizacja paznokci", „Magda — rzęsy i brwi", „Kasia — kosmetologia") + `Poznaj cały zespół →`
-
-**9. OPINIE** (blush): format Google — gwiazdki, treść, `Imię N.`, `opinia Google`. 6 sztuk. **W opiniach wymieniać usługi i imiona specjalistek** („Ola zrobiła najpiękniejsze migdałki w moim życiu") — tak wyglądają prawdziwe opinie salonów.
-
-**10. VOUCHER — zajawka** (cream): `Podaruj komuś godzinę dla siebie` + `Voucher ważny 12 miesięcy, elegancko zapakowany` + przycisk `Skomponuj prezent →`
-
-**11. CTA końcowe** (blush): `Twój termin czeka.` + przycisk `Zarezerwuj wizytę` + telefon
-
-**Pływający przycisk** `Zarezerwuj` (wzorzec z Aurelii E17; ukryty na /kontakt).
+**Pływający przycisk** `Zarezerwuj` — prawy dolny róg, po 400px przewinięcia, ukryty na `/kontakt`.
 
 ---
 
 ## 4. CENNIK-KATALOG `/uslugi` — SERCE STRONY
 
-> To jest odpowiednik modułu „Dobierz zabieg" z Aurelii — tylko odwrócony. Tam klientka nie znała zabiegu; tu ZNA i chce go znaleźć w 5 sekund.
+- **Pole filtra na żywo** (sticky): `Wpisz, czego szukasz — np. hybryda, laminacja, oczyszczanie…`
+- Filtr po nazwie ORAZ ukrytych synonimach („hybryda" → Manicure hybrydowy; „migdałki" → przedłużanie żelowe; „pedi" → pedicure)
+- 6 kategorii w akordeonach (otwarte na desktop, zwinięte na mobile)
+- Każda pozycja: nazwa · czas · **konkretna cena** · przycisk `Rezerwuj` → `/kontakt?usluga=[nazwa]`
+- `services.ts`: ~50 usług, pola: nazwa, kategoria, czas, cena, synonimy, opis 1 zdanie
+- Ceny realne (Trójmiasto 2026): hybryda 120–140, żel 160–190, laminacja brwi 110–130, lifting rzęs 130–150, oczyszczanie wodorowe 180–220, masaż 60 min 180–220
 
-- **Pole filtra na żywo na górze** (sticky): placeholder `Wpisz, czego szukasz — np. hybryda, laminacja, oczyszczanie…`
-- Filtr działa po nazwie usługi ORAZ ukrytych synonimach (np. „hybryda" → Manicure hybrydowy; „migdałki" → przedłużanie żelowe; „pedi" → pedicure)
-- Usługi pogrupowane w 6 kategorii (akordeony, wszystkie otwarte na desktop, zwinięte na mobile)
-- **Każda pozycja cennika:** nazwa · czas trwania · cena (konkretna, nie tylko „od") · przycisk `Rezerwuj` → /kontakt?usluga=[nazwa]
-- Dane w `src/data/services.ts`: ~45–55 usług (realistyczny katalog salonu), każda z polami: nazwa, kategoria, czas, cena, synonimy, opis 1 zdanie
-- Ceny realne rynkowo (Trójmiasto 2026): hybryda 120–140, żel 160–190, laminacja brwi 110–130, lifting rzęs 130–150, oczyszczanie wodorowe 180–220, masaż 60 min 180–220 itd.
-
-**Strony kategorii `/uslugi/[kategoria]`:** H1 kategorii, 2–3 zdania wstępu, lista usług tej kategorii z cenami i przyciskami, galeria 3–4 prac, FAQ kategorii (3 pytania), CTA. Lżejsze niż strony zabiegowe Aurelii — tu nie trzeba edukować o rekonwalescencji, wystarczy konkret.
+**Strony kategorii:** H1, wstęp 2–3 zdania, lista usług z cenami i przyciskami, galeria 3–4 prac, FAQ (3 pytania), CTA.
 
 ---
 
-## 5. VOUCHERY I PAKIETY `/vouchery` (produkt, nie ozdobnik)
+## 5. VOUCHERY I PAKIETY `/vouchery`
 
 - H1: `Podaruj czas na piękno`
-- **Vouchery kwotowe:** karty 150 / 300 / 500 zł + „dowolna kwota" — z wizualizacją eleganckiej karty podarunkowej
-- **Pakiety-przeżycia:** `Dzień dla Niej` (twarz + manicure + masaż, cena pakietowa −15%), `Przed wielkim dniem` (brwi + rzęsy + makijaż próbny), `Mama i córka` (2× pielęgnacja)
-- Zasady drobnym drukiem: ważność 12 mies., rezerwacja terminu telefonicznie/formularzem
-- Zamówienie: formularz (voucher=[typ]) — klientka zostawia kontakt, salon dzwoni. (Docelowo u klienta: płatność online — wpisane w ofercie jako rozszerzenie)
-- CTA na panieńskie/eventy: `Planujesz wieczór panieński? Napisz — ułożymy program dla całej ekipy`
+- **Vouchery kwotowe:** 150 / 300 / 500 zł + dowolna kwota, wizualizacja karty
+- **Pakiety:** `Dzień dla Niej` (twarz + manicure + masaż, −15%), `Przed wielkim dniem` (brwi + rzęsy + makijaż próbny), `Mama i córka`
+- Drobnym drukiem: ważność 12 miesięcy, rezerwacja telefonicznie/formularzem
+- Zamówienie: formularz `?voucher=[typ]`
+- CTA: `Planujesz wieczór panieński? Napisz — ułożymy program dla całej ekipy`
 
 ---
 
-## 6. REZERWACJA `/kontakt` (bez kalendarza — zgodnie z decyzją)
+## 6. REZERWACJA `/kontakt` (bez kalendarza)
 
-- Formularz z kontekstem (wzorzec Aurelia E11): czyta parametry `usluga`, `cel` (event/voucher), `promo`
-- Pola: Imię* · Telefon* · Usługa (select z pełnej listy — prewypełniony z parametru) · Preferowany termin (select: najbliższe dni/tydzień/elastycznie) · Preferowana specjalistka (opcjonalnie, select) · Uwagi · RODO*
+- Formularz czyta parametry `usluga`, `cel`, `promo`, `voucher`
+- Pola: Imię* · Telefon* · Usługa (select, prewypełniony) · Preferowany termin (najbliższe dni / w tygodniu / elastycznie) · Preferowana specjalistka (opcjonalnie) · Uwagi · RODO*
 - Ukryte pola przekazują kontekst — salon dostaje: kto, telefon, jaka usługa, u kogo, kiedy woli
-- Web3Forms (placeholder TODO_WEB3FORMS_KEY, jak Aurelia)
-- Obok formularza: telefon (duży, klikalny), godziny, mapa, adres
+- Web3Forms (`TODO_WEB3FORMS_KEY`)
+- Obok: telefon (duży, klikalny), godziny, mapa, adres
 - Adnotacja: `Oddzwaniamy tego samego dnia roboczego i potwierdzamy termin.`
 
 ---
 
-## 7. STRONA SYSTEMU `/jak-pozyskujemy-klientki` (manifest dla właścicielki salonu)
+## 7. STRONA SYSTEMU `/jak-pozyskujemy-klientki`
 
-Adaptacja wzorca Aurelii — warstwy, część DZIAŁA, część MAKIETA (etykiety `PRZYKŁAD` obowiązkowe):
 - H1: `Nie budujemy stron. Budujemy grafik pełny rezerwacji.`
 - Warstwa 1 (DZIAŁA): cennik z filtrem — klientka znajduje usługę w 5 sekund
-- Warstwa 2 (DZIAŁA): rezerwacja z kontekstem — wiesz, kto, na co i do kogo chce przyjść
-- Warstwa 3 (DZIAŁA): promocje sezonowe podmieniane w 2 minuty
+- Warstwa 2 (DZIAŁA): rezerwacja z kontekstem
+- Warstwa 3 (DZIAŁA): promocje podmieniane w 2 minuty
 - Warstwa 4 (DZIAŁA): vouchery i pakiety — drugi strumień przychodu
-- Warstwa 5 (DZIAŁA): lądowiska SEO na dzielnice/miasta Trójmiasta
-- Warstwa 6 (MAKIETA): wizytówka Google — `PRZYKŁAD`
+- Warstwa 5 (DZIAŁA): lądowiska SEO na dzielnice i miasta
+- Warstwa 6 (MAKIETA): wizytówka Google — etykieta `PRZYKŁAD`
 - Warstwa 7 (MAKIETA): raport miesięczny — `PRZYKŁADOWY RAPORT — DANE DEMONSTRACYJNE`
-- **Blok „0% prowizji":** rzeczowe porównanie — rezerwacje przez własną stronę nie mają prowizji pośredników; widżet Booksy można wpiąć równolegle (bez hejtu na Booksy — to partner, nie wróg; narracja: „własny kanał + Booksy, nie zamiast")
-- CTA `Chcę taki system` → popup/link Connectiva
+- **Blok „0% prowizji":** rzeczowo — rezerwacje przez własną stronę nie mają prowizji pośredników; widżet Booksy można wpiąć równolegle. Bez atakowania Booksy: „własny kanał + Booksy, nie zamiast".
+- CTA `Chcę taki system`
 
 ---
 
-## 8. LĄDOWISKA SEO (wzorzec Aurelia 18.8 poprawione — lekkie drzwi, nie dom)
+## 8. LĄDOWISKA SEO `/beauty-[slug]`
 
-Ścieżka `/beauty-[slug]`, szablon LEKKI (breadcrumb, H1 `Salon beauty [Miasto/Dzielnica]`, unikalny lead 2–3 zdania z dojazdem, akapit o instytucie, lista kategorii usług jako linki, przycisk `Zobacz pełną ofertę →` na główną, mapa, lista pozostałych lokalizacji, JSON-LD BeautySalon z areaServed, adres zawsze Gdynia Świętojańska):
+Szablon LEKKI („drzwi, nie dom"): breadcrumb → H1 `Salon beauty [Miejsce]` → unikalny lead 2–3 zdania z dojazdem → akapit o instytucie → lista kategorii jako linki → **przycisk `Zobacz pełną ofertę →` na stronę główną** → mapa → lista pozostałych lokalizacji.
 
-Gdynia (centrum) · Gdynia-Orłowo · Gdynia-Chylonia · Gdynia-Witomino · Rumia · Reda · Wejherowo · Sopot · Gdańsk-Oliwa · Gdańsk-Wrzeszcz — **10 lądowisk**
+**10 lokalizacji:** Gdynia-Centrum, Gdynia-Orłowo, Gdynia-Chylonia, Gdynia-Witomino, Rumia, Reda, Wejherowo, Sopot, Gdańsk-Oliwa, Gdańsk-Wrzeszcz.
 
-Zdanie obowiązkowe: `Nasz instytut mieści się w Gdyni przy ul. Świętojańskiej — klientki z [Miejsce] dojeżdżają do nas w ok. X minut.` UKRYTE w nawigacji, obecne w sitemapie, wzajemne linkowanie.
+Zdanie obowiązkowe (generowane, z poprawnym dopełniaczem): `Nasz instytut mieści się w Gdyni przy ul. Świętojańskiej — klientki z [Miejsca] dojeżdżają do nas w ok. X minut.`
+
+UKRYTE w nawigacji (brak linków z menu/stopki/strony głównej), obecne w `sitemap.xml`, `robots: index, follow`, wzajemne linkowanie między lokalizacjami. JSON-LD `BeautySalon` z `areaServed`; adres zawsze Gdynia.
 
 ---
 
 ## 9. ZGODNOŚĆ I UCZCIWOŚĆ DEMO
 
-- **Popup przy wejściu** (wzorzec Aurelia): `To jest strona demonstracyjna — Instytut ELARA nie istnieje; to projekt pokazowy Connectivy` + przycisk `Chcę taką stronę` → https://connectiva-website.pages.dev + `Rozumiem, chcę zobaczyć demo`
-- Wszystkie makiety (wizytówka, raport) z etykietą `PRZYKŁAD`
-- Salon beauty NIE podlega zakazowi reklamy medycznej — promocje/rabaty legalne. ALE: bez obietnic zdrowotnych („leczy", „usuwa trwale") przy zabiegach kosmetycznych; efekty z adnotacją indywidualną przy przed/po
+- **Popup przy wejściu** (wzorzec Aurelii, `DemoNoticeModal.astro`): raz na sesję (`sessionStorage`), modal wyśrodkowany, overlay, zamykanie przyciskiem/Escape/kliknięciem w tło, focus trap, pełne ARIA.
+  - H2: `To jest strona demonstracyjna`
+  - Akapit 1: `Instytut ELARA nie istnieje — to fikcyjna marka stworzona przez Connectivę, aby pokazać, jak może wyglądać profesjonalna strona dla salonu beauty. Wszystkie dane, usługi, ceny i opinie są wymyślone.`
+  - Akapit 2 (wyróżniony): `Prowadzisz salon lub instytut urody? Taką stronę — wraz z systemem pozyskiwania klientek — zbudujemy również dla Ciebie.`
+  - Przycisk 1: `Chcę taką stronę` → `https://connectiva-website.pages.dev` (nowa karta) — *docelowo podmiana na stronę portfolio*
+  - Przycisk 2 (ghost): `Rozumiem, chcę zobaczyć demo`
+- Wszystkie makiety z etykietą `PRZYKŁAD`
+- Salon beauty NIE podlega zakazowi reklamy medycznej — promocje legalne. ALE bez obietnic zdrowotnych („leczy", „usuwa trwale"); przy przed/po adnotacja o indywidualności efektu.
 - Stopka: `© 2026 ELARA · Strona demonstracyjna Connectiva · Polityka prywatności`
 
 ---
 
-## 10. ZDJĘCIA (Higgsfield — osobna sesja, po zbudowaniu szkieletu)
+## 10. ZDJĘCIA (Higgsfield, osobna sesja)
 
-Lista docelowa (~14): hero (klientka relaks/wnętrze, 4:5), wnętrze recepcja z logo ELARA, 2× wnętrze stanowiska, 6× prace (2 paznokcie, 2 brwi/rzęsy, 1 makijaż, 1 pielęgnacja), 3× zespół (portrety, ciepłe tło, BEZ tekstu na ubraniach — lekcja z fartuchów Aurelii!), 1× voucher/pakiet prezentowy flat-lay. Do czasu zdjęć: placeholder z kodu (cream tło + linia z kropką + nazwa kategorii — wzorzec Aurelia E16).
-
----
-
-## 11. ETAPY BUDOWY (dla Claude Code — jeden etap naraz, STOP po każdym)
-
-**ETAP 1 — Fundament:** projekt Astro 5 + Tailwind 4, fonty Fraunces/Figtree, zmienne palety, Base.astro, Header (górny pasek + menu: Usługi ▾ | Vouchery | Promocje | Zespół | O nas | Kontakt + przycisk Zarezerwuj), Footer, komponent linii-z-kropką, pływający przycisk. Build, STOP.
-
-**ETAP 2 — Strona główna:** wszystkie sekcje wg pkt 3 (z placeholderami zdjęć), promo.ts z przykładową promocją i odliczaniem. Build, STOP.
-
-**ETAP 3 — Cennik-katalog:** services.ts (~50 usług z synonimami), /uslugi z filtrem na żywo i akordeonami, przyciski Rezerwuj z parametrem. Build, STOP.
-
-**ETAP 4 — Strony kategorii:** 6 stron /uslugi/[kategoria] wg szablonu pkt 4. Build, STOP.
-
-**ETAP 5 — Vouchery + Promocje:** /vouchery wg pkt 5, /promocje (lista aktualnych z promo.ts). Build, STOP.
-
-**ETAP 6 — Zespół, O nas, Pierwsza wizyta:** /zespol (6 specjalistek z przypisaniem usług), /o-nas, /pierwsza-wizyta (lżejszy ton niż Aurelia). Build, STOP.
-
-**ETAP 7 — Rezerwacja z kontekstem:** /kontakt wg pkt 6, parametry usluga/cel/promo, ukryte pola. Build, STOP.
-
-**ETAP 8 — Strona systemu:** /jak-pozyskujemy-klientki wg pkt 7 z makietami i etykietami PRZYKŁAD. Build, STOP.
-
-**ETAP 9 — Lądowiska SEO:** cities.ts + 10 stron wg pkt 8, wzajemne linkowanie, sitemap. Build, STOP.
-
-**ETAP 10 — Popup demo + SEO + audyt mobilny:** DemoNoticeModal, meta/OG/JSON-LD całości, pełny audyt mobilny (checklista jak Aurelia 15.4), Lighthouse (cel ≥90 mobile). Build, raport. STOP.
+~14 sztuk: 3 kafelki hero (twarz 3:4, paznokcie 1:1, brwi/rzęsy 4:5), wnętrze recepcji, 2× stanowiska, 6× prace, 3× zespół (**BEZ tekstu na ubraniach** — lekcja z fartuchów Aurelii), 1× flat-lay vouchera.
+Styl wspólny: ciepłe światło, kremowe i pudrowe tony, premium beauty, `photorealistic, no text`.
+Do czasu zdjęć: placeholder z kodu (tło `--blush`, linia z kropką, nazwa kategorii).
 
 ---
 
-*Specyfikacja ELARA v1 — Grupa 3 (salon beauty). Wzorce: J'ADORE Instytut + rynek 2026. Metodyka: identyczna jak Aurelia. Demo fikcyjne, oznaczone popupem.*
+## 11. ETAPY BUDOWY
+
+**UKOŃCZONE:** Etap 1 (fundament), 2 (strona główna), 3 (cennik-katalog), 4 (strony kategorii), 5 (vouchery + promocje).
+
+**ETAP 6 — Zespół, O nas, Pierwsza wizyta:** `/zespol` (6 specjalistek z przypisanymi usługami), `/o-nas`, `/pierwsza-wizyta`. Build, STOP.
+
+**ETAP 7 — Rezerwacja z kontekstem:** `/kontakt` wg sekcji 6, parametry i ukryte pola. Build, STOP.
+
+**ETAP 8 — Strona systemu:** `/jak-pozyskujemy-klientki` wg sekcji 7, makiety z etykietami. Build, STOP.
+
+**ETAP 9 — Lądowiska SEO:** `cities.ts` + 10 stron wg sekcji 8, wzajemne linkowanie, sitemap. Build, wypisz adresy. STOP.
+
+**ETAP 10 — Popup demo + SEO:** `DemoNoticeModal` wg sekcji 9, meta/OG/JSON-LD całości, `robots.txt`, `404`. Build, STOP.
+
+**ETAP 11 — HERO I WARSTWA RUCHU:** pełna sekcja 12. Build, Lighthouse mobile, raport. STOP.
+
+**ETAP 12 — Audyt końcowy:** desktop + mobile (360/390/414px), Lighthouse mobile i desktop (cel ≥90 Performance, 100 Accessibility), sprawdzenie że animacje nie psują przewijania na telefonie. Napraw znalezione. Build, raport. STOP.
+
+---
+
+# 12. HERO I WARSTWA RUCHU
+
+> **Cel:** ELARA nie może wyglądać jak Aurelia w innych kolorach. Różnica wynika z klientki: pacjentka kliniki CZYTA, klientka salonu OGLĄDA. Stąd hero zdjęciowe i strona, która żyje pod palcem.
+>
+> **Dyscyplina:** ruch ma być elegancki, nie cyrkowy. Zero bounce, migania, animowanych gradientów. Lighthouse Performance ≥90 mobile pozostaje twardym wymogiem.
+
+---
+
+### 12.1 HERO — MOZAIKA TRÓJKĄTNA
+
+Zdjęcia zajmują **to samo miejsce co obecne pojedyncze zdjęcie** (prawa strefa hero, ~50% szerokości na desktopie) — ale zamiast jednego prostokąta są **trzy mniejsze kafelki w układzie trójkąta**.
+
+**Układ (desktop ≥1024px):**
+- **Kafelek A — GÓRA** (wierzchołek trójkąta): format 4:5, wyśrodkowany poziomo względem strefy, największy z trzech. Motyw: pielęgnacja twarzy / klientka w relaksie.
+- **Kafelek B — DÓŁ LEWY**: format 1:1, mniejszy. Motyw: stylizacja paznokci (detal dłoni).
+- **Kafelek C — DÓŁ PRAWY**: format 1:1, mniejszy, przesunięty w dół o ~24px względem B (lekka asymetria — trójkąt ma nie być idealnie równoramienny, to wygląda projektowo).
+- Odstęp między kafelkami: 16px. Promień 4px, delikatny cień.
+- Cała mozaika mieści się w obrysie dotychczasowego zdjęcia — nie rozpycha hero.
+- Tekst po lewej (~45%) bez zmian w treści: overline → H1 `Twój czas na piękno.` → jedno zdanie → przycisk `Zarezerwuj wizytę` → `lub zadzwoń: 512 340 219`.
+- Wysokość hero: max 82vh.
+
+**Układ (mobile <768px):**
+- Kolejność pionowa: overline → H1 → zdanie → przycisk → telefon → **mozaika trójkątna zmniejszona** (A na górze wyśrodkowany, B i C obok siebie pod spodem), łącznie max 38vh.
+- Zachowujemy trójkąt także na telefonie — to sygnatura układu, nie ozdoba desktopu.
+
+**Obrazy:** z `src/assets/`, `srcset` (480/720/1080). Kafelek A: `loading="eager"`, `fetchpriority="high"`. B i C: `lazy`. Do czasu zdjęć — placeholdery z kodu.
+
+---
+
+### 12.2 EFEKT UCIECZKI HERO (dwa przeciwbieżne ruchy)
+
+Główny efekt interaktywny hero. Aktywowany **wyłącznie przewijaniem** — w spoczynku hero jest nieruchome.
+
+**Mechanika:**
+- Postęp `p` liczony od 0 do 1 w zakresie przewinięcia **0 → 65vh**.
+- **TEKST ucieka w LEWO:** `translateX(-220px × p)` na desktopie, `-120px × p` na mobile.
+- **KAFELKI uciekają w PRAWO:** `translateX(+260px × p)` bazowo — ale **każdy kafelek z inną prędkością**, żeby rozjechały się wachlarzem zamiast sunąć jak jedna płyta:
+  - Kafelek A (góra): mnożnik **1.0** → +260px × p
+  - Kafelek B (dół lewy): mnożnik **0.72** → +187px × p
+  - Kafelek C (dół prawy): mnożnik **1.28** → +333px × p
+  - Ten rozjazd zastępuje osobny parallax — kafelki i tak się rozdzielają.
+- **Towarzyszące zanikanie, ale niepełne:** `opacity: 1 → 0.15` (nie do zera — elementy mają UCIEC za krawędź, nie rozpłynąć się w powietrzu).
+- **Lekkie oddalenie:** `scale(1 → 0.94)` — dodaje głębi, jakby odjeżdżały w tło.
+- Krzywa: `easeOutQuad` na `p` — szybko na starcie, zwolnienie na końcu.
+- **Ruch odwracalny:** przewijanie w górę przywraca elementy dokładnie tą samą ścieżką.
+- Hero i jego wrapper: `overflow-x: hidden` — nic nie może wystawać poza ekran ani powodować przewijania poziomego.
+- Wyłącznie `transform` i `opacity`, obliczenia w `requestAnimationFrame`, listener `passive: true`.
+
+---
+
+### 12.3 PAS NAZW USŁUG (marquee)
+
+Wąski pas pod hero, nad paskiem zaufania.
+- Tło `--blush`, tekst `--copper-dark`, wysokość ~56px desktop / 44px mobile.
+- Treść w nieskończonej pętli, elementy oddzielone **sygnaturą marki (kropką)**:
+  `MANICURE HYBRYDOWY · LAMINACJA BRWI · LIFTING RZĘS · OCZYSZCZANIE WODOROWE · MASAŻ GORĄCYMI KAMIENIAMI · PRZEDŁUŻANIE RZĘS · HENNA PUDROWA · DEPILACJA WOSKIEM · MAKIJAŻ OKOLICZNOŚCIOWY`
+- Ruch bazowy: ciągły, w lewo, ~40s pełna pętla (CSS `@keyframes` + `translateX`).
+- **Reakcja na przewijanie:** przy scrollu pas przyspiesza (mnożnik do 2.5×), po zatrzymaniu płynnie wraca do prędkości bazowej. Realizacja: zmienna CSS `--marquee-speed` aktualizowana z JS w `requestAnimationFrame`.
+- Duplikat treści w drugim kontenerze — pętla bezszwowa.
+- `overflow: hidden` na wrapperze; pas nie może powodować przewijania poziomego strony.
+
+---
+
+### 12.4 NIĆ — LINIA Z KROPKĄ PRZEZ CAŁĄ STRONĘ
+
+> **To jest sygnatura marki ELARY (linia z kropką) rozwinięta na całą wysokość strony.** Nie jest to efekt doklejony — to logo w ruchu. Element, który klient zapamięta.
+
+**Wygląd:**
+- Pionowa **nić wijąca się slalomem** przez całą wysokość strony: raz odchyla się w lewo, raz w prawo, łagodnymi łukami (krzywe Béziera, amplituda ~14% szerokości okna, pełna fala co ~90vh).
+- Kolor `--copper`, grubość bazowa **1.5px**. Delikatna, nie dominuje.
+- **Warstwa: pod sekcjami** (`z-index: -1`). Sekcje mają pełne tła (`--cream` / `--blush`), więc nić **jest widoczna wyłącznie w przerwach między sekcjami** — wygląda, jakby zszywała stronę jak nić materiał. To jest zamierzony efekt: nie pasek z boku, tylko element pomiędzy.
+- Aby nić była widoczna, między sekcjami muszą istnieć **przerwy oddechowe 48–72px** z tłem strony — uwzględnić przy układzie.
+
+**Kropka:**
+- Po nici wędruje **kropka** o średnicy 9px, wypełniona `--copper`, z bardzo delikatną poświatą.
+- Pozycja kropki = postęp przewinięcia strony (0% na górze, 100% na dole). Przewijasz w dół — kropka jedzie w dół. Zatrzymujesz — stoi.
+- Realizacja: `path.getTotalLength()` + `getPointAtLength(progress × total)`, aktualizacja w `requestAnimationFrame`.
+
+**Zgrubienie wokół kropki („wąż, który połknął mysz"):**
+- **Druga ścieżka SVG**, identyczna geometrycznie, grubość **4px**, rysowana pod kropką.
+- Odsłaniana wyłącznie w **oknie ~140px długości ścieżki wokół bieżącej pozycji kropki** — przez `stroke-dasharray` + `stroke-dashoffset` sterowane tą samą wartością postępu.
+- Krawędzie okna wygaszane (`stroke-linecap: round` + gradient przezroczystości na końcach), żeby zgrubienie **narastało i zanikało płynnie**, a nie pojawiało się skokiem.
+- Efekt: wraz z przewijaniem wzdłuż nici wędruje pogrubienie — dokładnie jak przesuwające się wybrzuszenie.
+
+**Mobile:** amplituda slalomu zmniejszona do ~8% szerokości, grubości 1px / 3px, kropka 7px. Nić pozostaje — jest sygnaturą, nie ozdobą desktopu.
+
+**Wydajność:** jeden element SVG na całą stronę, `position: absolute` względem kontenera strony (nie `fixed`), bez przeliczania układu przy przewijaniu. Aktualizowane wyłącznie atrybuty `cx`/`cy` kropki i `stroke-dashoffset` — obie właściwości nie wymuszają przeliczenia układu strony.
+
+---
+
+### 12.5 LICZNIKI W PASKU ZAUFANIA
+
+- Cztery liczby dobijają od 0 do wartości docelowej, gdy sekcja wejdzie w ekran (IntersectionObserver, threshold 0.4).
+- Czas 1200ms, wygładzenie `easeOutCubic`, **animacja tylko raz**.
+- Wartość końcowa obecna w HTML od początku (czytniki ekranu, SEO) — JS podmienia wyłącznie wyświetlanie w trakcie.
+- `4,9/5` animuje część liczbową z jednym miejscem po przecinku.
+
+---
+
+### 12.6 PRZYPIĘTA SEKCJA KATEGORII
+
+**Desktop (≥1024px):**
+- Sekcja usług przypięta (`position: sticky`) na ~300vh przewijania.
+- Podział ekranu: lewa połowa — duże zdjęcie kategorii; prawa — lista sześciu kategorii z cenami „od".
+- W miarę przewijania aktywna kategoria zmienia się kolejno (1→6): zdjęcie przechodzi crossfadem (250ms), pozycja listy podświetla się (`--copper`, kropka-sygnatura przed nazwą, przesunięcie o 8px w prawo).
+- Cienki pasek postępu przy prawej krawędzi — klientka widzi, ile zostało, i nie czuje się uwięziona.
+- Każda pozycja **klikalna** → strona kategorii. Przypięcie nie może blokować kliknięć.
+
+**Mobile (<1024px):**
+- **Bez przypinania.** Sześć kafelków wjeżdża kaskadowo (80ms odstępu) przy wejściu w ekran.
+- Powód: przypięte sekcje psują naturalne przewijanie na telefonie, a klientka salonu ogląda głównie z telefonu.
+
+**Realizacja:** IntersectionObserver na znacznikach kroków wewnątrz przypiętego kontenera. Przełączanie klasą CSS, crossfade na `opacity`.
+
+---
+
+### 12.7 WEJŚCIA ELEMENTÓW (kaskada)
+
+- Sekcje poniżej hero: `fade + translateY(14px)`, 450ms `ease-out`, IntersectionObserver threshold 0.15, **tylko raz**.
+- W siatkach: opóźnienie **80ms** między kolejnymi elementami. Maksymalne łączne opóźnienie 480ms — powyżej elementy pojawiają się razem.
+
+---
+
+### 12.8 WYDAJNOŚĆ I DOSTĘPNOŚĆ — WYMOGI TWARDE
+
+- **`prefers-reduced-motion: reduce`** wyłącza WSZYSTKO: efekt ucieczki (hero statyczne), marquee (pas nieruchomy), nić (linia widoczna, kropka na górze, bez ruchu), liczniki (od razu wartość końcowa), przypinanie (sekcja zwykła), kaskady (elementy widoczne od razu). Obowiązkowo.
+- Animować wyłącznie `transform` i `opacity`. Zero animacji `width`, `height`, `top`, `margin`.
+- `will-change` tylko na elementach aktualnie animowanych, zdejmowane po zakończeniu.
+- Wszystkie nasłuchy przewijania przez `requestAnimationFrame`, listenery `passive: true`. **Jeden wspólny nasłuch scrolla** dla wszystkich efektów (ucieczka, marquee, nić) — nie trzy osobne.
+- Na słabszych urządzeniach (`navigator.hardwareConcurrency <= 4`): wyłączyć przyspieszanie marquee i zgrubienie nici; reszta zostaje.
+- Treść w pełni czytelna i klikalna **bez JavaScriptu** — ruch to warstwa dodana, nie warunek działania.
+- Zero przewijania poziomego na jakiejkolwiek szerokości.
+
+**Drabinka awaryjna (jeśli Lighthouse Performance < 90 mobile):** upraszczaj po kolei — (1) zgrubienie nici, (2) przyspieszanie marquee, (3) przypięta sekcja → wersja kaskadowa także na desktopie, (4) efekt ucieczki → sam fade bez przesunięcia. Nić i kropka zostają do końca — to sygnatura marki.
+
+---
+
+*Specyfikacja ELARA v2 — kompletna, zastępuje wszystkie wcześniejsze wersje. Demo fikcyjne, oznaczone popupem. Metodyka: jeden etap naraz, commit po każdym.*

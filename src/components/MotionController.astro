@@ -1,0 +1,46 @@
+---
+---
+
+<script>
+  (function () {
+    if (window.elaraMotion) return;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
+
+    const callbacks = new Set();
+    let running = false;
+
+    function frame() {
+      const scrollY = window.scrollY;
+      for (const cb of callbacks) cb({ scrollY, reducedMotion, lowPower });
+      if (running) requestAnimationFrame(frame);
+    }
+
+    function start() {
+      if (running || reducedMotion) return;
+      running = true;
+      requestAnimationFrame(frame);
+    }
+
+    function stop() {
+      running = false;
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    window.elaraMotion = {
+      reducedMotion,
+      lowPower,
+      register(cb) {
+        callbacks.add(cb);
+        if (reducedMotion) cb({ scrollY: window.scrollY, reducedMotion: true, lowPower });
+      },
+    };
+
+    start();
+  })();
+</script>

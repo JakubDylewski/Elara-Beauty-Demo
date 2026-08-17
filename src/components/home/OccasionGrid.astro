@@ -14,10 +14,12 @@ const occasions = [
     </h2>
 
     <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {occasions.map((occasion) => (
+      {occasions.map((occasion, index) => (
         <a
           href={occasion.href}
           class="group rounded-2xl bg-cream p-6 transition-colors hover:bg-graphite"
+          data-cascade
+          style={`transition-delay: ${index * 80}ms`}
         >
           <p class="font-serif text-lg font-semibold text-graphite group-hover:text-cream transition-colors">
             {occasion.title}

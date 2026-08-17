@@ -34,6 +34,7 @@
     background-color: var(--color-cream);
     color: var(--color-graphite);
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
 
   h1,
@@ -41,5 +42,39 @@
   h3,
   h4 {
     font-family: var(--font-serif);
+  }
+}
+
+/* 12.7 — kaskadowe wejścia sekcji i elementów siatek */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 450ms ease-out, transform 450ms ease-out;
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 12.6 — przypięta sekcja kategorii: fallback bez ruchu */
+@media (prefers-reduced-motion: reduce) {
+  [data-sticky-container] {
+    height: auto !important;
+  }
+
+  [data-sticky-panel] {
+    position: static !important;
+    height: auto !important;
+  }
+}
+
+/* 12.8 — wymóg twardy: brak ruchu przy prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

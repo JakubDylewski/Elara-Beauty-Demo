@@ -3,6 +3,9 @@ import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FloatingBookButton from "../components/FloatingBookButton.astro";
+import MotionController from "../components/MotionController.astro";
+import RevealController from "../components/RevealController.astro";
+import MotionThread from "../components/MotionThread.astro";
 
 interface Props {
   title: string;
@@ -25,10 +28,15 @@ const {
     <title>{title} · ELARA Instytut Urody</title>
   </head>
   <body class="flex min-h-screen flex-col">
+    <MotionController />
+    <RevealController />
     <Header />
-    <main class="flex-1">
-      <slot />
-    </main>
+    <div class="relative isolate flex-1" id="page-thread-wrapper">
+      <MotionThread />
+      <main>
+        <slot />
+      </main>
+    </div>
     <Footer />
     <FloatingBookButton />
   </body>
