@@ -1,0 +1,18 @@
+---
+import DotLine from "./DotLine.astro";
+
+interface Props {
+  label: string;
+  aspect?: string;
+  tone?: "cream" | "blush";
+  class?: string;
+}
+
+const { label, aspect = "aspect-square", tone = "blush", class: className = "" } = Astro.props;
+const toneClass = tone === "cream" ? "bg-cream" : "bg-blush";
+---
+
+<div class={`flex ${aspect} flex-col items-center justify-center gap-3 rounded-2xl border border-graphite/10 ${toneClass} px-4 text-center ${className}`}>
+  <DotLine />
+  <p class="text-sm font-medium text-graphite-soft">{label}</p>
+</div>

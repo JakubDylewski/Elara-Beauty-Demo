@@ -1,0 +1,32 @@
+---
+const occasions = [
+  { title: "Dla siebie", description: "Zabieg dobrany do Ciebie", href: "/uslugi" },
+  { title: "Na prezent", description: "Voucher, który zachwyca", href: "/vouchery" },
+  { title: "Na wielkie wyjście", description: "Makijaż i stylizacja na event", href: "/uslugi/makijaz" },
+  { title: "Na panieński", description: "Wieczór piękna dla całej ekipy", href: "/kontakt?cel=event" },
+];
+---
+
+<section class="bg-blush">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">
+      Na każdą okazję
+    </h2>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {occasions.map((occasion) => (
+        <a
+          href={occasion.href}
+          class="group rounded-2xl bg-cream p-6 transition-colors hover:bg-graphite"
+        >
+          <p class="font-serif text-lg font-semibold text-graphite group-hover:text-cream transition-colors">
+            {occasion.title}
+          </p>
+          <p class="mt-2 text-sm text-graphite-soft group-hover:text-cream/70 transition-colors">
+            {occasion.description}
+          </p>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

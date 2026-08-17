@@ -1,0 +1,149 @@
+---
+import { categories } from "../data/categories";
+
+const phone = "512 340 219";
+const phoneHref = "tel:+48512340219";
+
+const navLinks = [
+  { label: "Vouchery", href: "/vouchery" },
+  { label: "Promocje", href: "/promocje" },
+  { label: "Zespół", href: "/zespol" },
+  { label: "O nas", href: "/o-nas" },
+  { label: "Kontakt", href: "/kontakt" },
+];
+---
+
+<header class="sticky top-0 z-50">
+  <!-- Górny pasek -->
+  <div class="bg-graphite text-cream text-sm">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-6">
+      <p class="hidden sm:block">Pon–Sob 9:00–20:00</p>
+      <div class="flex w-full items-center justify-between gap-4 sm:w-auto sm:justify-end">
+        <a href={phoneHref} class="font-medium hover:text-blush transition-colors">
+          {phone}
+        </a>
+        <a
+          href="/kontakt"
+          class="rounded-full bg-copper px-4 py-1.5 font-medium text-cream hover:bg-copper-dark transition-colors"
+        >
+          Zarezerwuj
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Główna nawigacja -->
+  <div class="bg-cream/95 backdrop-blur border-b border-graphite/10">
+    <nav class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6" aria-label="Główna">
+      <a href="/" class="font-serif text-2xl font-semibold tracking-wide text-graphite">
+        ELARA
+      </a>
+
+      <!-- Desktop menu -->
+      <ul class="hidden items-center gap-8 text-[0.95rem] font-medium text-graphite lg:flex">
+        <li class="group relative">
+          <a href="/uslugi" class="inline-flex items-center gap-1 hover:text-copper transition-colors">
+            Usługi
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </a>
+          <div
+            class="invisible absolute left-1/2 top-full w-64 -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100"
+          >
+            <ul class="rounded-xl border border-graphite/10 bg-cream py-2 shadow-lg">
+              {categories.map((category) => (
+                <li>
+                  <a
+                    href={`/uslugi/${category.slug}`}
+                    class="flex items-center justify-between px-4 py-2 text-sm hover:bg-blush hover:text-copper-dark transition-colors"
+                  >
+                    <span>{category.name}</span>
+                    <span class="text-graphite-soft">od {category.priceFrom} zł</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+        {navLinks.map((link) => (
+          <li>
+            <a href={link.href} class="hover:text-copper transition-colors">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+
+      <a
+        href="/kontakt"
+        class="hidden rounded-full bg-copper px-5 py-2.5 text-sm font-semibold text-cream hover:bg-copper-dark transition-colors lg:inline-block"
+      >
+        Zarezerwuj wizytę
+      </a>
+
+      <!-- Mobile toggle -->
+      <button
+        type="button"
+        id="menu-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        aria-label="Otwórz menu"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-graphite/15 text-graphite lg:hidden"
+      >
+        <svg id="icon-open" width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+          <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+        <svg id="icon-close" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" class="hidden">
+          <path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </nav>
+
+    <!-- Mobile menu panel -->
+    <div id="mobile-menu" class="hidden border-t border-graphite/10 bg-cream lg:hidden">
+      <ul class="mx-auto max-w-6xl px-4 py-4 text-graphite sm:px-6">
+        <li class="py-2 font-medium text-graphite-soft">Usługi</li>
+        {categories.map((category) => (
+          <li>
+            <a href={`/uslugi/${category.slug}`} class="block py-2 pl-4 text-sm hover:text-copper transition-colors">
+              {category.name}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/uslugi" class="block py-2 pl-4 text-sm font-medium text-copper-dark">
+            Zobacz pełny cennik →
+          </a>
+        </li>
+        <li class="my-2 border-t border-graphite/10"></li>
+        {navLinks.map((link) => (
+          <li>
+            <a href={link.href} class="block py-2 font-medium hover:text-copper transition-colors">{link.label}</a>
+          </li>
+        ))}
+        <li class="pt-4">
+          <a
+            href="/kontakt"
+            class="block rounded-full bg-copper px-5 py-3 text-center font-semibold text-cream hover:bg-copper-dark transition-colors"
+          >
+            Zarezerwuj wizytę
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const iconOpen = document.getElementById("icon-open");
+  const iconClose = document.getElementById("icon-close");
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    toggle.setAttribute("aria-expanded", String(!isOpen));
+    menu?.classList.toggle("hidden");
+    iconOpen?.classList.toggle("hidden");
+    iconClose?.classList.toggle("hidden");
+  });
+</script>

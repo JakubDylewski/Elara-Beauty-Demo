@@ -1,0 +1,30 @@
+---
+import { featuredPromo, daysUntil } from "../../data/promo";
+
+const daysLeft = daysUntil(featuredPromo.endDate);
+const dayWord = daysLeft === 1 ? "dzień" : "dni";
+---
+
+<section class="bg-cream">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <div class="rounded-3xl border border-copper/20 bg-blush px-6 py-10 text-center sm:px-12 sm:py-14">
+      <p class="text-xs font-semibold uppercase tracking-widest text-copper-dark">{featuredPromo.label}</p>
+      <h2 class="mt-3 font-serif text-2xl font-semibold text-graphite sm:text-3xl">{featuredPromo.title}</h2>
+      <p class="mx-auto mt-3 max-w-lg text-graphite-soft">{featuredPromo.description}</p>
+      <p class="mt-5 text-sm font-medium text-copper-dark">
+        Do końca zostało: {daysLeft} {dayWord}
+      </p>
+      <a
+        href={featuredPromo.ctaHref}
+        class="mt-6 inline-block rounded-full bg-copper px-8 py-3.5 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        {featuredPromo.ctaLabel}
+      </a>
+      <p class="mt-4 text-sm">
+        <a href="/promocje" class="font-medium text-copper-dark hover:text-copper transition-colors">
+          Zobacz wszystkie promocje →
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

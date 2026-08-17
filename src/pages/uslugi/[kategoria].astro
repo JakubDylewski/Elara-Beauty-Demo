@@ -1,0 +1,101 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+import ImagePlaceholder from "../../components/ImagePlaceholder.astro";
+import { categories } from "../../data/categories";
+import { services } from "../../data/services";
+import { categoryContent } from "../../data/categoryContent";
+
+export function getStaticPaths() {
+  return categories.map((category) => ({
+    params: { kategoria: category.slug },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+const content = categoryContent[category.slug];
+const items = services.filter((service) => service.categorySlug === category.slug);
+---
+
+<Base
+  title={category.name}
+  description={`${category.name} w ELARA Gdynia — ceny, czas trwania i rezerwacja online. ${content.intro}`}
+>
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-16">
+      <nav class="text-sm text-graphite-soft" aria-label="Okruszki">
+        <a href="/uslugi" class="hover:text-copper-dark transition-colors">Usługi</a>
+        <span class="mx-2">/</span>
+        <span class="text-graphite">{category.name}</span>
+      </nav>
+
+      <DotLine class="mt-6" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">{category.name}</h1>
+      <p class="mt-4 max-w-2xl text-graphite-soft">{content.intro}</p>
+    </div>
+  </section>
+
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 pb-14 sm:px-6">
+      <ul class="divide-y divide-graphite/10 border-t border-graphite/10">
+        {items.map((service) => (
+          <li class="flex flex-wrap items-center justify-between gap-3 py-4">
+            <div class="max-w-md">
+              <p class="font-medium text-graphite">{service.name}</p>
+              <p class="mt-0.5 text-sm text-graphite-soft">
+                {service.duration} · {service.description}
+              </p>
+            </div>
+            <div class="flex items-center gap-4">
+              <p class="font-serif text-lg font-semibold text-copper-dark">{service.price} zł</p>
+              <a
+                href={`/kontakt?usluga=${encodeURIComponent(service.name)}`}
+                class="rounded-full bg-copper px-4 py-2 text-sm font-semibold text-cream hover:bg-copper-dark transition-colors"
+              >
+                Rezerwuj
+              </a>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-blush">
+    <div class="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Nasze prace</h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {content.gallery.map((label) => (
+          <ImagePlaceholder label={label} aspect="aspect-square" tone="cream" />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream">
+    <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Pytania i odpowiedzi</h2>
+      <div class="mt-10 space-y-6">
+        {content.faq.map((item) => (
+          <div class="border-b border-graphite/10 pb-6">
+            <p class="font-serif text-lg font-semibold text-graphite">{item.question}</p>
+            <p class="mt-2 text-graphite-soft">{item.answer}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-blush">
+    <div class="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+      <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">Umów się na {category.name.toLowerCase()}</h2>
+      <a
+        href="/kontakt"
+        class="mt-6 inline-block rounded-full bg-copper px-8 py-4 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        Zarezerwuj wizytę
+      </a>
+    </div>
+  </section>
+</Base>

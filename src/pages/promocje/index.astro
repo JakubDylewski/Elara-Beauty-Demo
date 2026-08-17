@@ -1,0 +1,48 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+import { promos, daysUntil } from "../../data/promo";
+---
+
+<Base title="Promocje" description="Aktualne promocje ELARA Instytut Urody — sprawdź, co teraz się opłaca i zarezerwuj wizytę w niższej cenie.">
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Promocje</h1>
+      <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
+        Aktualne oferty specjalne — sprawdzaj regularnie, bo podmieniamy je co miesiąc.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 pb-16 sm:px-6 sm:pb-20">
+      <div class="space-y-6">
+        {promos.map((promo) => {
+          const daysLeft = daysUntil(promo.endDate);
+          const dayWord = daysLeft === 1 ? "dzień" : "dni";
+          return (
+            <div class="rounded-3xl border border-copper/20 bg-blush px-6 py-8 sm:px-10 sm:py-10">
+              <p class="text-xs font-semibold uppercase tracking-widest text-copper-dark">{promo.label}</p>
+              <h2 class="mt-3 font-serif text-2xl font-semibold text-graphite sm:text-3xl">{promo.title}</h2>
+              <p class="mt-3 max-w-lg text-graphite-soft">{promo.description}</p>
+              <p class="mt-5 text-sm font-medium text-copper-dark">
+                Do końca zostało: {daysLeft} {dayWord}
+              </p>
+              <a
+                href={promo.ctaHref}
+                class="mt-6 inline-block rounded-full bg-copper px-8 py-3.5 font-semibold text-cream hover:bg-copper-dark transition-colors"
+              >
+                {promo.ctaLabel}
+              </a>
+            </div>
+          );
+        })}
+      </div>
+
+      <p class="mt-10 text-center text-sm text-graphite-soft">
+        Promocje nie łączą się ze sobą. Aktualność oferty potwierdzamy przy rezerwacji.
+      </p>
+    </div>
+  </section>
+</Base>

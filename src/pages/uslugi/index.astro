@@ -1,0 +1,129 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+import { categories } from "../../data/categories";
+import { services } from "../../data/services";
+import { normalize } from "../../lib/normalize";
+
+const groups = categories.map((category) => ({
+  category,
+  items: services.filter((service) => service.categorySlug === category.slug),
+}));
+---
+
+<Base title="Cennik i usługi" description="Pełny cennik usług ELARA — paznokcie, rzęsy, brwi, twarz, ciało i makijaż. Znajdź usługę i zarezerwuj wizytę.">
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Cennik</h1>
+      <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
+        Znajdź usługę, sprawdź cenę i zarezerwuj wizytę w mniej niż minutę.
+      </p>
+    </div>
+  </section>
+
+  <div class="sticky top-[104px] z-30 border-b border-graphite/10 bg-cream/95 backdrop-blur lg:top-[121px]">
+    <div class="mx-auto max-w-4xl px-4 py-4 sm:px-6">
+      <input
+        id="service-filter"
+        type="text"
+        placeholder="Wpisz, czego szukasz — np. hybryda, laminacja, oczyszczanie…"
+        class="w-full rounded-full border border-graphite/15 bg-cream px-5 py-3 text-graphite placeholder:text-graphite-soft focus:border-copper focus:outline-none"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+
+  <section class="bg-cream">
+    <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <p id="no-results" class="hidden py-10 text-center text-graphite-soft">
+        Brak usług pasujących do wyszukiwania. Spróbuj innego słowa albo{" "}
+        <a href="/kontakt" class="font-medium text-copper-dark hover:text-copper transition-colors">zapytaj nas bezpośrednio</a>.
+      </p>
+
+      <div class="divide-y divide-graphite/10">
+        {groups.map(({ category, items }) => (
+          <details data-service-group class="group py-2">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-4">
+              <span class="font-serif text-xl font-semibold text-graphite sm:text-2xl">{category.name}</span>
+              <svg
+                class="h-3 w-3 shrink-0 text-copper transition-transform duration-200 group-open:rotate-180"
+                viewBox="0 0 10 6"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </summary>
+
+            <ul class="pb-6">
+              {items.map((service) => (
+                <li
+                  data-service-item
+                  data-search={normalize(`${service.name} ${service.synonyms.join(" ")}`)}
+                  class="flex flex-wrap items-center justify-between gap-3 border-t border-graphite/5 py-4 first:border-t-0"
+                >
+                  <div class="max-w-md">
+                    <p class="font-medium text-graphite">{service.name}</p>
+                    <p class="mt-0.5 text-sm text-graphite-soft">
+                      {service.duration} · {service.description}
+                    </p>
+                  </div>
+                  <div class="flex items-center gap-4">
+                    <p class="font-serif text-lg font-semibold text-copper-dark">{service.price} zł</p>
+                    <a
+                      href={`/kontakt?usluga=${encodeURIComponent(service.name)}`}
+                      class="rounded-full bg-copper px-4 py-2 text-sm font-semibold text-cream hover:bg-copper-dark transition-colors"
+                    >
+                      Rezerwuj
+                    </a>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { normalize } from "../../lib/normalize";
+
+  const input = document.getElementById("service-filter") as HTMLInputElement | null;
+  const groups = document.querySelectorAll<HTMLDetailsElement>("[data-service-group]");
+  const noResults = document.getElementById("no-results");
+
+  function setDefaultOpenState() {
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    groups.forEach((group) => {
+      group.open = isDesktop;
+    });
+  }
+
+  setDefaultOpenState();
+
+  input?.addEventListener("input", () => {
+    const query = normalize(input.value.trim());
+    let totalMatches = 0;
+
+    groups.forEach((group) => {
+      const items = group.querySelectorAll<HTMLLIElement>("[data-service-item]");
+      let groupMatches = 0;
+
+      items.forEach((item) => {
+        const haystack = item.dataset.search ?? "";
+        const isMatch = query === "" || haystack.includes(query);
+        item.classList.toggle("hidden", !isMatch);
+        if (isMatch) groupMatches++;
+      });
+
+      group.classList.toggle("hidden", groupMatches === 0);
+      group.open = query === "" ? window.matchMedia("(min-width: 1024px)").matches : groupMatches > 0;
+      totalMatches += groupMatches;
+    });
+
+    noResults?.classList.toggle("hidden", totalMatches > 0);
+  });
+</script>
