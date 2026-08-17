@@ -1,0 +1,113 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+
+const steps = [
+  {
+    title: "Umawiasz się",
+    text: "Wybierasz usługę w cenniku i klikasz „Rezerwuj”, dzwonisz albo piszesz — jak Ci wygodniej. Odpowiadamy tego samego dnia roboczego.",
+  },
+  {
+    title: "Przychodzisz i łapiesz oddech",
+    text: "Masz 5 minut zapasu? Świetnie — usiądź na recepcji, wypij kawę albo herbatę. Nie ma papierów do wypełniania na stojąco.",
+  },
+  {
+    title: "Gadamy, zanim zaczniemy",
+    text: "Specjalistka pyta, czego oczekujesz, pokazuje wzory czy kolory, jeśli trzeba — bez wciskania czegoś, na co się nie umawiałaś.",
+  },
+  {
+    title: "Zabieg",
+    text: "Czas na Ciebie. Telefon możesz odłożyć — a jeśli wolisz go trzymać w ręce, też w porządku, to nie jest szkoła.",
+  },
+  {
+    title: "Wychodzisz z planem na kolejny raz",
+    text: "Mówimy, kiedy warto wrócić i czym się zająć w domu — bez sprzedawania Ci pół półki kosmetyków, których nie potrzebujesz.",
+  },
+];
+
+const faq = [
+  {
+    question: "Ile wcześniej przyjść?",
+    answer: "Wystarczy 5 minut przed umówioną godziną. Jeśli to Twoja pierwsza wizyta w danej usłudze, spokojnie możesz przyjść 10 minut wcześniej — będzie czas na rozmowę.",
+  },
+  {
+    question: "Co mam ze sobą zabrać?",
+    answer: "Nic konkretnego. Do zabiegów na paznokcie czy rzęsy nie potrzebujesz żadnego przygotowania — resztę mamy na miejscu.",
+  },
+  {
+    question: "Czy mogę zmienić termin?",
+    answer: "Jasne, zdarza się. Daj nam znać telefonicznie z wyprzedzeniem chociaż kilku godzin, a znajdziemy nowy termin bez pytań.",
+  },
+];
+---
+
+<Base
+  title="Pierwsza wizyta"
+  description="Jak wygląda pierwsza wizyta w ELARA — krok po kroku, bez stresu. Salon beauty w Gdyni, nie placówka medyczna."
+>
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Twoja pierwsza wizyta</h1>
+      <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
+        Bez białych fartuchów i formularzy na trzy strony. To salon urody, nie gabinet lekarski — a pierwsza wizyta
+        wygląda dokładnie tak zwyczajnie, jak powinna.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <ol class="space-y-8">
+        {steps.map((step, index) => (
+          <li class="flex gap-5">
+            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-copper font-serif text-lg font-semibold text-cream">
+              {index + 1}
+            </span>
+            <div>
+              <p class="font-serif text-xl font-semibold text-graphite">{step.title}</p>
+              <p class="mt-1.5 text-graphite-soft">{step.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Najczęstsze pytania</h2>
+      <div class="mt-10 space-y-6">
+        {faq.map((item) => (
+          <div class="border-b border-graphite/10 pb-6">
+            <p class="font-serif text-lg font-semibold text-graphite">{item.question}</p>
+            <p class="mt-2 text-graphite-soft">{item.answer}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+      <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">To naprawdę tyle.</h2>
+      <p class="mx-auto mt-3 max-w-lg text-graphite-soft">Reszta zależy już tylko od tego, co wybierzesz z cennika.</p>
+      <a
+        href="/kontakt"
+        class="mt-6 inline-block rounded-full bg-copper px-8 py-4 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        Zarezerwuj wizytę
+      </a>
+      <p class="mt-3 text-sm text-graphite-soft">
+        lub zadzwoń:
+        <a href="tel:+48512340219" class="font-medium text-copper-dark hover:text-copper transition-colors">
+          512 340 219
+        </a>
+      </p>
+    </div>
+  </section>
+</Base>

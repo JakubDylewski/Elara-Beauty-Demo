@@ -1,0 +1,112 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+import ImagePlaceholder from "../../components/ImagePlaceholder.astro";
+
+const interiors = [
+  { label: "Recepcja" },
+  { label: "Stanowisko zabiegowe" },
+  { label: "Strefa relaksu" },
+];
+
+const values = [
+  {
+    title: "Efekt, nie obietnice",
+    text: "Nie mówimy „na pewno się spodoba” — pokazujemy prace, tłumaczymy proces i dobieramy zabieg do Twoich oczekiwań, nie odwrotnie.",
+  },
+  {
+    title: "Stały zespół, nie rotacja",
+    text: "Specjalistki, które znasz z imienia, pamiętają Twoje preferencje i historię wizyt — bez tłumaczenia wszystkiego od nowa za każdym razem.",
+  },
+  {
+    title: "Higiena bez kompromisów",
+    text: "Sterylizacja narzędzi, jednorazowe akcesoria tam, gdzie to możliwe, czyste stanowiska — standard, o który nie musisz pytać.",
+  },
+];
+
+const brands = [
+  { name: "Lumière Cosmetics", text: "Pielęgnacja twarzy i zabiegi liftingujące." },
+  { name: "Terra Botanica", text: "Naturalne serum i oleje do masażu ciała." },
+  { name: "Silk & Stone", text: "Systemy hybrydowe i żelowe do paznokci." },
+  { name: "Velour Lashes", text: "Preparaty do laminacji i przedłużania rzęs." },
+];
+---
+
+<Base
+  title="O nas"
+  description="Poznaj ELARA — instytut urody w Gdyni. Filozofia, wnętrza i marki kosmetyków, na których pracujemy."
+>
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">O nas</h1>
+      <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
+        ELARA powstała z jednego przekonania: godzina dla siebie nie powinna być luksusem raz na rok, tylko stałym
+        punktem w kalendarzu.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Wnętrze</h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-3">
+        {interiors.map((item) => (
+          <ImagePlaceholder label={item.label} aspect="aspect-[4/5]" tone="cream" />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Nasza filozofia</h2>
+      <div class="mt-10 space-y-8">
+        {values.map((value) => (
+          <div class="border-b border-graphite/10 pb-8 last:border-b-0 last:pb-0">
+            <p class="font-serif text-xl font-semibold text-graphite">{value.title}</p>
+            <p class="mt-2 text-graphite-soft">{value.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">Marki, na których pracujemy</h2>
+      <p class="mx-auto mt-3 max-w-lg text-center text-graphite-soft">
+        Współpracujemy z markami premium, które łączą skuteczność z bezpiecznym składem.
+      </p>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {brands.map((brand) => (
+          <div class="rounded-2xl bg-cream p-6 text-center">
+            <DotLine class="justify-center" />
+            <p class="mt-3 font-serif text-lg font-semibold text-graphite">{brand.name}</p>
+            <p class="mt-1 text-sm text-graphite-soft">{brand.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+      <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">Zobacz nas na żywo</h2>
+      <p class="mx-auto mt-3 max-w-lg text-graphite-soft">
+        Najlepiej przekonać się samej — zarezerwuj wizytę i poznaj zespół osobiście.
+      </p>
+      <a
+        href="/kontakt"
+        class="mt-6 inline-block rounded-full bg-copper px-8 py-4 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        Zarezerwuj wizytę
+      </a>
+    </div>
+  </section>
+</Base>
