@@ -342,3 +342,84 @@ Wąski pas pod hero, nad paskiem zaufania.
 ---
 
 *Specyfikacja ELARA v2 — kompletna, zastępuje wszystkie wcześniejsze wersje. Demo fikcyjne, oznaczone popupem. Metodyka: jeden etap naraz, commit po każdym.*
+
+
+
+
+
+
+
+## POPRAWKA 12.4 — NIĆ CIĄGŁA (zastępuje dotychczasową nić)
+
+> **Co się zmienia i dlaczego.** Dotychczasowa nić była schowana ZA sekcjami (`z-index: -1`) i widoczna tylko w przerwach między nimi — więc wyglądała jak poszatkowana: kawałek linii, sekcja bez linii, znowu kawałek. Nowa nić ma być **jedną ciągłą linią biegnącą po wierzchu całej strony**, nieprzerwanie od góry do dołu, przez wszystkie sekcje. To jest sygnatura marki przeszywająca stronę jak nić materiał.
+
+---
+
+### A. WARSTWY (kluczowa zmiana)
+
+Nić przestaje być pod sekcjami. Nowa kolejność warstw (od najniższej do najwyższej), spójna na CAŁEJ stronie:
+
+1. **Tła sekcji** (`--cream` / `--blush`) — najniżej
+2. **NIĆ** (linia + zgrubienie + kropka) — nad tłami, widoczna zawsze
+3. **Teksty, nagłówki, listy** — nad nicią, ale ich **tło jest przezroczyste**, więc nić prześwituje między/za literami
+4. **Kafelki zdjęć i placeholdery** — najwyżej; nić przechodzi POD nimi (chowa się pod zdjęciami i wynurza za nimi — to daje wrażenie przeszywania)
+
+Realizacja: pojedynczy element SVG rozpięty na całą wysokość dokumentu (`position: absolute`, względem kontenera strony, nie `fixed`), z `z-index` ustawionym tak, by leżał nad tłami sekcji, a pod warstwą kafelków. Sekcje **nie mogą mieć nieprzezroczystego tła nałożonego na całą szerokość ponad nicią** — tło ma być na najniższej warstwie, nie przykrywać linii.
+
+---
+
+### B. CIĄGŁOŚĆ (bez przerw)
+
+- Nić to **jedna nieprzerwana ścieżka** (`<path>`) od samej góry strony (y=0) do samego dołu (pełna wysokość dokumentu).
+- **Nie ma już logiki „przerw między sekcjami".** Odstępy 64px między sekcjami przestają być potrzebne do pokazania nici (mogą zostać dla oddechu, ale nić nie zależy już od nich).
+- Linia biegnie slalomem przez ŚRODEK strony (nie z boku): łagodne łuki lewo-prawo, amplituda ~12% szerokości okna, pełna fala co ~90vh. Ma wić się centralnie, przechodząc pod kafelkami zdjęć w kolejnych sekcjach.
+- Ponieważ wysokość strony jest znana dopiero po złożeniu layoutu — geometrię ścieżki generować po `load` i przeliczać przy zmianie rozmiaru okna (ResizeObserver na kontenerze strony).
+
+---
+
+### C. KROPKA — ŁEZKA (zmiana kształtu)
+
+- Kropka przestaje być okrągłym punktem z poświatą. Ma być **łezką** (kształt kropli): zaokrąglona z jednej strony, zwężona w szpic z drugiej, zorientowana **wzdłuż kierunku ruchu nici** (szpic z tyłu, jakby ciągnęła ogon).
+- **Bez poświaty/glow.** Czysty, pełny kształt w kolorze `--copper`. Ma być elegancka, nie świecąca.
+- Rozmiar: ~10×16px (dłuższa niż szersza, bo to łezka).
+- Orientacja łezki obraca się zgodnie ze styczną do ścieżki w bieżącym punkcie (żeby szpic zawsze wskazywał wzdłuż linii).
+- Pozycja = postęp przewinięcia strony (0% góra, 100% dół). Przewijasz w dół — łezka jedzie w dół.
+
+---
+
+### D. ZGRUBIENIE — „WĄŻ, KTÓRY POŁKNĄŁ MYSZ" (zostaje, dopracować)
+
+- Wokół łezki linia **grubieje i wraca do cienkości** — wybrzuszenie wędrujące razem z kropką. To zostaje, bo działa.
+- Realizacja jak dotychczas: druga ścieżka o większej grubości (4px), odsłaniana w oknie ~140px długości wokół pozycji kropki przez `stroke-dasharray`/`stroke-dashoffset`, krawędzie wygaszane, żeby narastało płynnie.
+- **Bez glow na zgrubieniu** — samo pogrubienie linii, czysto.
+- Efekt docelowy: po całej stronie płynnie wędruje jedno wybrzuszenie z łezką na czele — nieprzerwanie, przez wszystkie sekcje.
+
+---
+
+### E. CZYTELNOŚĆ (wymóg — pilnować)
+
+Przezroczyste tła tekstów odsłaniają nić, ale nie mogą utrudnić czytania:
+- Linia bazowa jest **cienka (1.5px)** i miedziana — pod tekstem ma prześwitywać delikatnie, nie przecinać liter w poprzek w sposób męczący.
+- Jeśli w którejś sekcji nić trafia dokładnie w kolumnę tekstu i szkodzi czytelności — dopuszczalne jest lokalne odchylenie amplitudy slalomu, tak by linia przechodziła raczej obok bloków tekstu / pod kafelkami niż przez sam środek akapitu. Priorytet: (1) ciągłość linii, (2) czytelność tekstu, (3) przejście pod kafelkami.
+- Naprzemienne tła sekcji (`--cream`/`--blush`) **zostają** — nić leży nad nimi, ale tła nadal dają rytm strony. (Nie robić całej strony jednolicie przezroczystej — chodzi o to, że nić jest NAD tłem, a nie że tła znikają.)
+
+---
+
+### F. WYDAJNOŚĆ (bez zmian względem 12.8)
+
+- Jeden SVG na stronę, aktualizowane tylko: pozycja i rotacja łezki oraz `stroke-dashoffset` zgrubienia. Bez przeliczania layoutu przy przewijaniu.
+- `requestAnimationFrame`, listener `passive`, wspólny nasłuch scrolla z resztą efektów.
+- `prefers-reduced-motion`: nić widoczna (ciągła), łezka na górze, bez ruchu i bez wędrującego zgrubienia.
+- Cel Lighthouse Performance ≥90 mobile pozostaje.
+
+---
+
+### G. ETAP
+
+**ETAP 11B — Przebudowa nici na ciągłą:** przebuduj nić wg tej poprawki — warstwy (A), ciągłość bez przerw (B), łezka zamiast kropki z poświatą (C), zgrubienie bez glow (D), z pilnowaniem czytelności (E). Usuń logikę zależną od przerw między sekcjami. Zweryfikuj, że linia jest nieprzerwana od góry do dołu strony i przechodzi pod kafelkami zdjęć. Build, Lighthouse mobile, podsumuj. STOP.
+
+*Licznik w pasku zaufania (12.5) działa i zostaje bez zmian — nie ruszać.*
+
+---
+
+*Poprawka 12.4 — nić ciągła po wierzchu strony. Sygnatura marki przeszywająca całą stronę nieprzerwanie.*
