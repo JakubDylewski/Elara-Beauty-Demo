@@ -423,3 +423,88 @@ Przezroczyste tła tekstów odsłaniają nić, ale nie mogą utrudnić czytania:
 ---
 
 *Poprawka 12.4 — nić ciągła po wierzchu strony. Sygnatura marki przeszywająca całą stronę nieprzerwanie.*
+
+
+
+
+
+
+
+
+# 13. ROZSTĘPUJĄCE SIĘ SEKCJE (ruch boczny przy przewijaniu)
+
+> **Motyw:** cała strona ELARY „rozstępuje się" przy przewijaniu — tak jak hero (tekst w lewo, kafelki w prawo). Ten sam gest powtórzony w trzech kolejnych sekcjach tworzy spójny, zapamiętywalny charakter. Element rozjeżdża się, gdy sekcja przewija się przez ekran, i wraca, gdy przewijamy w drugą stronę.
+>
+> **Zasada:** ruch jest sterowany pozycją sekcji względem ekranu (scroll-linked), nie jednorazowym wyzwoleniem. Płynny, odwracalny, elegancki — nie skokowy.
+
+---
+
+### 13.1 MECHANIKA WSPÓLNA (dla wszystkich trzech sekcji)
+
+- Postęp `p` liczony od pozycji sekcji w oknie: `p = 0`, gdy sekcja dopiero wchodzi od dołu ekranu; `p ≈ 1`, gdy jest wyśrodkowana / wychodzi górą. Zakres dobrać tak, by efekt rozgrywał się, gdy sekcja jest dobrze widoczna (np. od momentu, gdy górna krawędź sekcji minie 85% wysokości okna, do momentu gdy minie 35%).
+- Elementy rozjeżdżają się od pozycji docelowej (0) do przesunięcia maksymalnego wraz z `p`. Przy `p=0` wszystko na swoim miejscu (sekcja czytelna), przesunięcie rośnie w miarę przewijania.
+- **Ruch odwracalny:** przewijanie w górę cofa elementy tą samą ścieżką.
+- Wyłącznie `transform: translate3d()`. Zero zmian layoutu, zero animacji szerokości/wysokości.
+- **Element nie może zniknąć całkowicie ani powodować przewijania poziomego** — maksymalne przesunięcia dobrane tak, by karty wyjeżdżały częściowo poza kadr, ale sekcja nigdy nie generowała poziomego scrolla (`overflow-x: hidden` na wrapperze sekcji jako zabezpieczenie).
+- Krzywa: liniowa lub delikatny `easeOut` na `p` — ruch ma podążać za przewijaniem naturalnie.
+
+---
+
+### 13.2 GALERIA PRAC (6 zdjęć, układ 3+3)
+
+- Układ: dwa rzędy po 3 zdjęcia (desktop). 
+- **Górny rząd (3 zdjęcia): ucieka w LEWO** — `translateX(-160px × p)` (desktop), `-90px × p` (mobile).
+- **Dolny rząd (3 zdjęcia): ucieka w PRAWO** — `translateX(+160px × p)` (desktop), `+90px × p` (mobile).
+- Opcjonalnie subtelne domknięcie: `opacity 1 → 0.6` przy krawędziach (nie do zera — mają wyjeżdżać, nie znikać).
+- Podpisy kategorii pod zdjęciami jadą razem ze swoim rzędem.
+
+---
+
+### 13.3 ZESPÓŁ (3 zdjęcia, ruch rozbieżny)
+
+- Układ: 3 karty w rzędzie (desktop).
+- **Lewa karta: ucieka w LEWO** — `translateX(-140px × p)`.
+- **Prawa karta: ucieka w PRAWO** — `translateX(+140px × p)`.
+- **Środkowa karta: ucieka w GÓRĘ** — `translateY(-120px × p)`.
+- Efekt: trójka „rozchodzi się" w trzech kierunkach — lewo, prawo, góra. To najbardziej wyrazisty moment z tej trójki, więc może mieć nieco większą amplitudę.
+- Mobile: karty ustawione w pionie (1 kolumna) — wtedy zamiast rozjazdu bocznego zastosować lekkie naprzemienne wejście (lewa z lewej, prawa z prawej, środkowa od dołu), amplituda ~60px, bo poziomy rozjazd na wąskim ekranie nie ma sensu.
+
+---
+
+### 13.4 OPINIE (6 kart, układ 3+3)
+
+- Układ: dwa rzędy po 3 karty opinii (desktop).
+- **Górny rząd: ucieka w LEWO** — `translateX(-160px × p)`.
+- **Dolny rząd: ucieka w PRAWO** — `translateX(+160px × p)`.
+- Identyczny wzorzec jak galeria (13.2) — celowo, żeby obie sekcje „rymowały się" wizualnie.
+- Gwiazdki, treść, podpis (`Imię N.`, `opinia Google`) jadą razem z kartą.
+
+---
+
+### 13.5 SEKCJE STATYCZNE (bez zmian — nie ruszać)
+
+Dla jasności — te sekcje NIE dostają ruchu bocznego:
+- „Na każdą okazję" (4 karty) — zostaje statyczna.
+- Pasek zaufania z licznikami — zostaje (liczniki działają).
+- Promocja miesiąca, cennik-zajawka, voucher-zajawka, CTA — bez ruchu bocznego (mają własne wejścia kaskadowe z 12.7).
+
+---
+
+### 13.6 WYDAJNOŚĆ I DOSTĘPNOŚĆ
+
+- **Wspólny nasłuch scrolla** — te trzy sekcje podpinają się pod ten sam mechanizm `requestAnimationFrame` co hero i nić (nie tworzyć osobnych listenerów scrolla dla każdej sekcji).
+- Każda sekcja liczona tylko, gdy jest w okolicy ekranu (IntersectionObserver włącza/wyłącza jej udział w pętli) — sekcje poza ekranem nie liczą transformacji.
+- `will-change: transform` tylko na elementach aktualnie w ruchu (gdy sekcja jest w oknie), zdejmowane po wyjściu.
+- **`prefers-reduced-motion: reduce`** → żadnego ruchu bocznego; elementy pojawiają się normalnie (ewentualnie samo delikatne fade z 12.7).
+- Zero przewijania poziomego na każdej szerokości (360/390/414/desktop).
+- Cel Lighthouse Performance ≥90 mobile pozostaje.
+
+---
+
+### 13.7 ETAP
+
+**ETAP 13 — Rozstępujące się sekcje:** dodaj scroll-linked ruch boczny do trzech sekcji strony głównej wg 13.2 (galeria: górny rząd w lewo, dolny w prawo), 13.3 (zespół: lewa w lewo, prawa w prawo, środkowa w górę) i 13.4 (opinie: górny rząd w lewo, dolny w prawo). Wspólna mechanika z 13.1, wszystkie zabezpieczenia z 13.6. Podłącz pod istniejący wspólny nasłuch scrolla (ten sam co hero/nić). Sekcje z 13.5 zostaw statyczne. Build, Lighthouse mobile, sprawdź brak przewijania poziomego, podsumuj. STOP.
+
+---
+
+*Sekcja 13 — rozstępujące się sekcje. Ten sam gest co hero, powtórzony trzykrotnie, buduje spójny charakter strony.*

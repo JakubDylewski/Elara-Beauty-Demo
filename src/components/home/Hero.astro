@@ -33,19 +33,16 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
       </div>
     </div>
 
-    <div class="lg:col-span-2">
-      <div
-        class="mx-auto flex max-h-[38vh] max-w-sm flex-col items-center gap-4 lg:max-h-none lg:max-w-none"
-        data-hero-mosaic
-      >
-        <div class="w-[60%]" data-hero-tile="a">
+    <div class="lg:col-span-2 overflow-visible">
+      <div class="mx-auto flex flex-col items-center gap-2.5 overflow-visible lg:gap-4" data-hero-mosaic>
+        <div class="w-[118px] lg:w-[190px]" data-hero-tile="a">
           <ImagePlaceholder label="Pielęgnacja twarzy · relaks" aspect="aspect-[4/5]" tone="blush" class="shadow-sm" />
         </div>
-        <div class="grid w-full grid-cols-2 gap-4">
-          <div data-hero-tile="b">
+        <div class="flex gap-2.5 lg:gap-4">
+          <div class="w-[75px] lg:w-[120px]" data-hero-tile="b">
             <ImagePlaceholder label="Stylizacja paznokci" aspect="aspect-square" tone="blush" class="shadow-sm" />
           </div>
-          <div data-hero-tile="c" class="translate-y-6">
+          <div class="w-[75px] translate-y-1.5 lg:w-[120px] lg:translate-y-3.5" data-hero-tile="c">
             <ImagePlaceholder label="Brwi i rzęsy" aspect="aspect-square" tone="blush" class="shadow-sm" />
           </div>
         </div>
@@ -67,6 +64,12 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
     tileC instanceof HTMLElement
   ) {
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const EXIT_BUFFER = 60;
+    const tiles = [
+      { el: tileA, rate: 1.0, naturalLeft: 0 },
+      { el: tileB, rate: 1.15, naturalLeft: 0 },
+      { el: tileC, rate: 1.35, naturalLeft: 0 },
+    ];
 
     function easeOutQuad(p) {
       return p * (2 - p);
@@ -78,18 +81,39 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
       el.style.opacity = "";
     }
 
-    function updateTile(el, multiplier, eased, opacity, scale, active) {
-      el.style.willChange = active ? "transform, opacity" : "";
-      el.style.transform = `translate3d(${260 * multiplier * eased}px, 0, 0) scale(${scale})`;
-      el.style.opacity = String(opacity);
+    function measureTiles() {
+      tiles.forEach((tile) => {
+        const prevTransform = tile.el.style.transform;
+        tile.el.style.transform = "";
+        tile.naturalLeft = tile.el.getBoundingClientRect().left;
+        tile.el.style.transform = prevTransform;
+      });
     }
+
+    function updateTile(tile, eased, opacity, scale, active) {
+      const clearDistance = Math.max(window.innerWidth - tile.naturalLeft + EXIT_BUFFER, 0);
+      const tileEased = Math.min(1, eased * tile.rate);
+      tile.el.style.willChange = active ? "transform, opacity" : "";
+      tile.el.style.transform = `translate3d(${clearDistance * tileEased}px, 0, 0) scale(${scale})`;
+      tile.el.style.opacity = String(opacity);
+    }
+
+    measureTiles();
+
+    let resizeTimer;
+    window.addEventListener(
+      "resize",
+      () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(measureTiles, 150);
+      },
+      { passive: true }
+    );
 
     window.elaraMotion?.register(({ scrollY, reducedMotion }) => {
       if (reducedMotion) {
         resetEl(heroText);
-        resetEl(tileA);
-        resetEl(tileB);
-        resetEl(tileC);
+        tiles.forEach((tile) => resetEl(tile.el));
         return;
       }
 
@@ -105,9 +129,7 @@ import ImagePlaceholder from "../ImagePlaceholder.astro";
       heroText.style.transform = `translate3d(${textDistance * eased}px, 0, 0)`;
       heroText.style.opacity = String(opacity);
 
-      updateTile(tileA, 1, eased, opacity, scale, active);
-      updateTile(tileB, 0.72, eased, opacity, scale, active);
-      updateTile(tileC, 1.28, eased, opacity, scale, active);
+      tiles.forEach((tile) => updateTile(tile, eased, opacity, scale, active));
     });
   }
 </script>
