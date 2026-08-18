@@ -1,0 +1,313 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+import { categories } from "../../data/categories";
+import { services } from "../../data/services";
+import { team } from "../../data/team";
+import { promos } from "../../data/promo";
+import { voucherPackages } from "../../data/vouchers";
+
+const promoLookup = Object.fromEntries(promos.map((p) => [p.slug, p.title]));
+const voucherPackageLookup = Object.fromEntries(voucherPackages.map((v) => [v.slug, v.name]));
+---
+
+<Base
+  title="Kontakt i rezerwacja"
+  description="Zarezerwuj wizytę w ELARA — Instytut Urody w Gdyni. Zadzwoń, napisz lub wypełnij formularz, a oddzwonimy tego samego dnia roboczego."
+>
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Zarezerwuj wizytę</h1>
+      <p class="mx-auto mt-3 max-w-xl text-graphite-soft">
+        Wypełnij formularz albo po prostu zadzwoń — oddzwaniamy tego samego dnia roboczego i potwierdzamy termin.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-6xl px-4 pb-16 sm:px-6 sm:pb-20">
+      <div class="grid gap-10 lg:grid-cols-5 lg:gap-12">
+        <div class="lg:col-span-3">
+          <div class="rounded-2xl bg-cream p-6 sm:p-8" id="contact-form-wrap">
+            <p
+              id="context-banner"
+              class="mb-5 hidden rounded-xl border border-copper/25 bg-blush px-4 py-3 text-sm text-copper-dark"
+            ></p>
+
+            <form
+              id="booking-form"
+              action="https://api.web3forms.com/submit"
+              method="POST"
+              data-team={JSON.stringify(team.map((m) => ({ name: m.name, specialization: m.specialization })))}
+              data-promos={JSON.stringify(promoLookup)}
+              data-voucher-packages={JSON.stringify(voucherPackageLookup)}
+            >
+              <input type="hidden" name="access_key" value="TODO_WEB3FORMS_KEY" />
+              <input type="hidden" name="subject" value="Nowe zgłoszenie rezerwacji — ELARA" />
+              <input type="hidden" name="from_name" value="Formularz rezerwacji ELARA" />
+              <input type="checkbox" name="botcheck" class="hidden" style="display: none;" tabindex="-1" autocomplete="off" />
+
+              <input type="hidden" name="cel" id="field-cel" value="" />
+              <input type="hidden" name="promo" id="field-promo" value="" />
+              <input type="hidden" name="voucher" id="field-voucher" value="" />
+
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label for="imie" class="block text-sm font-medium text-graphite">Imię *</label>
+                  <input
+                    type="text"
+                    id="imie"
+                    name="imie"
+                    required
+                    class="mt-1.5 w-full rounded-xl border border-graphite/15 bg-cream px-4 py-2.5 text-graphite focus:border-copper focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label for="telefon" class="block text-sm font-medium text-graphite">Telefon *</label>
+                  <input
+                    type="tel"
+                    id="telefon"
+                    name="telefon"
+                    required
+                    autocomplete="tel"
+                    class="mt-1.5 w-full rounded-xl border border-graphite/15 bg-cream px-4 py-2.5 text-graphite focus:border-copper focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div class="mt-5">
+                <label for="usluga-select" class="block text-sm font-medium text-graphite">Usługa</label>
+                <select
+                  id="usluga-select"
+                  name="usluga"
+                  class="mt-1.5 w-full rounded-xl border border-graphite/15 bg-cream px-4 py-2.5 text-graphite focus:border-copper focus:outline-none"
+                >
+                  <option value="">Wybierz usługę (opcjonalnie)</option>
+                  {categories.map((category) => (
+                    <optgroup label={category.name}>
+                      {services
+                        .filter((service) => service.categorySlug === category.slug)
+                        .map((service) => (
+                          <option value={service.name}>
+                            {service.name} — {service.price} zł
+                          </option>
+                        ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+
+              <fieldset class="mt-5">
+                <legend class="text-sm font-medium text-graphite">Preferowany termin</legend>
+                <div class="mt-2 flex flex-wrap gap-4">
+                  {[
+                    { value: "najblizsze-dni", label: "Najbliższe dni" },
+                    { value: "w-tygodniu", label: "W tym tygodniu" },
+                    { value: "elastycznie", label: "Elastycznie" },
+                  ].map((option) => (
+                    <label class="flex items-center gap-2 text-sm text-graphite">
+                      <input type="radio" name="termin" value={option.value} class="h-4 w-4 accent-copper" />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              <div class="mt-5">
+                <label for="specjalistka-select" class="block text-sm font-medium text-graphite">
+                  Preferowana specjalistka <span class="font-normal text-graphite-soft">(opcjonalnie)</span>
+                </label>
+                <select
+                  id="specjalistka-select"
+                  name="specjalistka"
+                  class="mt-1.5 w-full rounded-xl border border-graphite/15 bg-cream px-4 py-2.5 text-graphite focus:border-copper focus:outline-none"
+                >
+                  <option value="">Bez preferencji</option>
+                  {team.map((member) => (
+                    <option value={member.name}>
+                      {member.name} — {member.specialization}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div class="mt-5">
+                <label for="uwagi" class="block text-sm font-medium text-graphite">
+                  Uwagi <span class="font-normal text-graphite-soft">(opcjonalnie)</span>
+                </label>
+                <textarea
+                  id="uwagi"
+                  name="uwagi"
+                  rows="3"
+                  class="mt-1.5 w-full rounded-xl border border-graphite/15 bg-cream px-4 py-2.5 text-graphite focus:border-copper focus:outline-none"
+                ></textarea>
+              </div>
+
+              <div class="mt-5">
+                <label class="flex items-start gap-2.5 text-sm text-graphite-soft">
+                  <input type="checkbox" name="rodo" required class="mt-0.5 h-4 w-4 shrink-0 accent-copper" />
+                  <span>
+                    Wyrażam zgodę na przetwarzanie moich danych osobowych przez ELARA Instytut Urody w celu obsługi
+                    zgłoszenia i kontaktu w sprawie rezerwacji. *
+                  </span>
+                </label>
+              </div>
+
+              <button
+                type="submit"
+                id="submit-button"
+                class="mt-6 w-full rounded-full bg-copper px-8 py-3.5 text-center font-semibold text-cream hover:bg-copper-dark transition-colors sm:w-auto"
+              >
+                Wyślij zgłoszenie
+              </button>
+
+              <p class="mt-4 text-sm text-graphite-soft">
+                Oddzwaniamy tego samego dnia roboczego i potwierdzamy termin.
+              </p>
+
+              <p id="form-status" class="mt-4 hidden rounded-xl px-4 py-3 text-sm" role="status"></p>
+            </form>
+          </div>
+        </div>
+
+        <div class="lg:col-span-2">
+          <div class="rounded-2xl bg-cream p-6 sm:p-8">
+            <p class="text-sm font-semibold uppercase tracking-wide text-graphite-soft">Zadzwoń</p>
+            <a
+              href="tel:+48512340219"
+              class="mt-2 block font-serif text-3xl font-semibold text-copper-dark hover:text-copper transition-colors"
+            >
+              512 340 219
+            </a>
+
+            <DotLine class="my-6" />
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-graphite-soft">Godziny otwarcia</p>
+            <p class="mt-2 text-graphite">Poniedziałek–Sobota: 9:00–20:00</p>
+            <p class="text-graphite-soft">Niedziela: nieczynne</p>
+
+            <DotLine class="my-6" />
+
+            <p class="text-sm font-semibold uppercase tracking-wide text-graphite-soft">Adres</p>
+            <p class="mt-2 text-graphite">
+              ul. Świętojańska 82<br />
+              81-401 Gdynia
+            </p>
+
+            <div class="mt-6 overflow-hidden rounded-xl border border-graphite/10">
+              <iframe
+                title="Mapa — Gdynia, ul. Świętojańska"
+                src="https://www.google.com/maps?q=ul.+%C5%9Awi%C4%99toja%C5%84ska,+Gdynia&output=embed"
+                width="100%"
+                height="220"
+                style="border:0; display:block;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById("booking-form");
+  const contextBanner = document.getElementById("context-banner");
+  const uslugaSelect = document.getElementById("usluga-select");
+  const fieldCel = document.getElementById("field-cel");
+  const fieldPromo = document.getElementById("field-promo");
+  const fieldVoucher = document.getElementById("field-voucher");
+  const statusEl = document.getElementById("form-status");
+  const submitButton = document.getElementById("submit-button");
+
+  if (form instanceof HTMLFormElement) {
+    const params = new URLSearchParams(window.location.search);
+    const uslugaParam = params.get("usluga");
+    const celParam = params.get("cel");
+    const promoParam = params.get("promo");
+    const voucherParam = params.get("voucher");
+
+    const promos = JSON.parse(form.dataset.promos || "{}");
+    const voucherPackages = JSON.parse(form.dataset.voucherPackages || "{}");
+
+    const contextLines = [];
+
+    if (uslugaParam && uslugaSelect instanceof HTMLSelectElement) {
+      const match = Array.from(uslugaSelect.options).find((opt) => opt.value === uslugaParam);
+      if (match) {
+        uslugaSelect.value = uslugaParam;
+        contextLines.push(`Wybrana usługa: ${uslugaParam}`);
+      }
+    }
+
+    if (celParam) {
+      if (fieldCel instanceof HTMLInputElement) fieldCel.value = celParam;
+      if (celParam === "event") contextLines.push("Piszesz w sprawie: wieczoru panieńskiego");
+    }
+
+    if (promoParam) {
+      if (fieldPromo instanceof HTMLInputElement) fieldPromo.value = promoParam;
+      const promoTitle = promos[promoParam];
+      contextLines.push(`Dotyczy promocji: ${promoTitle || promoParam}`);
+    }
+
+    if (voucherParam) {
+      if (fieldVoucher instanceof HTMLInputElement) fieldVoucher.value = voucherParam;
+      let label = voucherParam;
+      const amountMatch = voucherParam.match(/^(\d+)-zl$/);
+      if (amountMatch) {
+        label = `voucher ${amountMatch[1]} zł`;
+      } else if (voucherParam === "dowolna-kwota") {
+        label = "voucher w dowolnej kwocie";
+      } else if (voucherPackages[voucherParam]) {
+        label = `pakiet „${voucherPackages[voucherParam]}”`;
+      }
+      contextLines.push(`Dotyczy: ${label}`);
+    }
+
+    if (contextLines.length > 0 && contextBanner) {
+      contextBanner.textContent = contextLines.join(" · ");
+      contextBanner.classList.remove("hidden");
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!(submitButton instanceof HTMLButtonElement) || !(statusEl instanceof HTMLElement)) return;
+
+      const originalLabel = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = "Wysyłanie…";
+      statusEl.classList.add("hidden");
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        const result = await response.json().catch(() => null);
+
+        if (response.ok && result?.success) {
+          statusEl.textContent = "Dziękujemy! Zgłoszenie dotarło — oddzwonimy tego samego dnia roboczego.";
+          statusEl.className = "mt-4 rounded-xl bg-copper/10 px-4 py-3 text-sm text-copper-dark";
+          form.reset();
+        } else {
+          throw new Error("Submit failed");
+        }
+      } catch {
+        statusEl.textContent =
+          "Nie udało się wysłać formularza. Zadzwoń do nas proszę: 512 340 219 — na pewno się dodzwonisz.";
+        statusEl.className = "mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700";
+      } finally {
+        statusEl.classList.remove("hidden");
+        submitButton.disabled = false;
+        submitButton.textContent = originalLabel;
+      }
+    });
+  }
+</script>
