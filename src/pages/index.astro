@@ -11,9 +11,41 @@ import TeamPreview from "../components/home/TeamPreview.astro";
 import Testimonials from "../components/home/Testimonials.astro";
 import VoucherTeaser from "../components/home/VoucherTeaser.astro";
 import FinalCta from "../components/home/FinalCta.astro";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  name: "ELARA — Instytut Urody",
+  telephone: "+48512340219",
+  email: "rezerwacje@elara-beauty.pl",
+  priceRange: "60–700 PLN",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "ul. Świętojańska 82",
+    addressLocality: "Gdynia",
+    postalCode: "81-401",
+    addressCountry: "PL",
+  },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    opens: "09:00",
+    closes: "20:00",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    reviewCount: "380",
+  },
+  url: "https://elara-beauty-demo.pages.dev/",
+};
 ---
 
-<Base title="Strona główna">
+<Base
+  title="Strona główna"
+  description="ELARA — Instytut Urody w Gdyni. Paznokcie, rzęsy, brwi, twarz, ciało i makijaż pod jednym dachem. Zarezerwuj wizytę online."
+  jsonLd={jsonLd}
+>
   <Hero />
   <ServiceMarquee />
   <TrustBar />

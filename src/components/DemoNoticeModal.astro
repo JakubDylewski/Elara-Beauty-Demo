@@ -1,0 +1,140 @@
+---
+---
+
+<dialog id="demo-notice" aria-labelledby="demo-notice-title" class="demo-notice">
+  <button type="button" id="demo-notice-close" aria-label="Zamknij" class="demo-notice-close">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M1 1l14 14M15 1L1 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
+
+  <h2 id="demo-notice-title" class="font-serif text-2xl font-semibold text-graphite sm:text-[1.75rem]">
+    To jest strona demonstracyjna
+  </h2>
+
+  <p class="mt-4 text-graphite-soft">
+    Instytut ELARA nie istnieje — to fikcyjna marka stworzona przez Connectivę, aby pokazać, jak może wyglądać
+    profesjonalna strona dla salonu beauty. Wszystkie dane, usługi, ceny i opinie są wymyślone.
+  </p>
+
+  <p class="mt-4 rounded-xl border border-copper/25 bg-blush px-4 py-3 text-graphite">
+    Prowadzisz salon lub instytut urody? Taką stronę — wraz z systemem pozyskiwania klientek — zbudujemy również dla
+    Ciebie.
+  </p>
+
+  <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+    <a
+      href="https://connectiva-website.pages.dev"
+      target="_blank"
+      rel="noopener"
+      class="inline-flex items-center justify-center rounded-full bg-copper px-6 py-3 text-center font-semibold text-cream hover:bg-copper-dark transition-colors"
+    >
+      Chcę taką stronę
+    </a>
+    <button
+      type="button"
+      id="demo-notice-dismiss"
+      class="inline-flex items-center justify-center rounded-full border border-graphite/20 px-6 py-3 text-center font-semibold text-graphite hover:border-graphite/40 transition-colors"
+    >
+      Rozumiem, chcę zobaczyć demo
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .demo-notice {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(92vw, 32rem);
+    max-width: 32rem;
+    height: fit-content;
+    max-height: 85vh;
+    overflow-y: auto;
+    border: none;
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    background-color: var(--color-cream);
+    color: var(--color-graphite);
+  }
+
+  @media (min-width: 640px) {
+    .demo-notice {
+      padding: 2.25rem;
+    }
+  }
+
+  .demo-notice::backdrop {
+    background-color: rgb(42 38 34 / 55%);
+  }
+
+  .demo-notice-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    display: inline-flex;
+    height: 2.25rem;
+    width: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    color: var(--color-graphite-soft);
+    transition: background-color 150ms, color 150ms;
+  }
+
+  .demo-notice-close:hover {
+    background-color: rgb(42 38 34 / 8%);
+    color: var(--color-graphite);
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "elara-demo-notice-seen";
+  const dialog = document.getElementById("demo-notice");
+  const closeButton = document.getElementById("demo-notice-close");
+  const dismissButton = document.getElementById("demo-notice-dismiss");
+
+  if (dialog instanceof HTMLDialogElement) {
+    let alreadySeen = false;
+    try {
+      alreadySeen = sessionStorage.getItem(STORAGE_KEY) === "1";
+    } catch {
+      alreadySeen = false;
+    }
+
+    if (!alreadySeen) {
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+    }
+
+    function markSeenAndUnlock() {
+      document.body.style.overflow = "";
+      try {
+        sessionStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        /* sessionStorage unavailable (private mode) — modal will simply reappear next load */
+      }
+    }
+
+    function close() {
+      if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
+      markSeenAndUnlock();
+    }
+
+    closeButton?.addEventListener("click", close);
+    dismissButton?.addEventListener("click", close);
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) close();
+    });
+
+    // Escape triggers the browser's native close natively; we still update our
+    // own state directly here rather than relying solely on the "close" event.
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") markSeenAndUnlock();
+    });
+
+    // Backstop for any other native close path.
+    dialog.addEventListener("close", markSeenAndUnlock);
+  }
+</script>

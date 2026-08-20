@@ -1,0 +1,34 @@
+---
+import Base from "../layouts/Base.astro";
+import DotLine from "../components/DotLine.astro";
+---
+
+<Base title="Strona nie znaleziona" description="Nie znaleźliśmy szukanej strony. Wróć na stronę główną ELARA — Instytut Urody w Gdyni." robots="noindex, follow">
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-2xl px-4 py-24 text-center sm:px-6 sm:py-32">
+      <DotLine class="justify-center" />
+      <p class="mt-4 font-serif text-6xl font-semibold text-graphite sm:text-7xl">404</p>
+      <h1 class="mt-4 font-serif text-3xl font-semibold text-graphite sm:text-4xl">Ta strona nam umknęła</h1>
+      <p class="mx-auto mt-3 max-w-md text-graphite-soft">
+        Link mógł się zdezaktualizować albo literówka wkradła się w adres. Wróć na stronę główną albo prosto do
+        cennika — na pewno znajdziesz to, czego szukasz.
+      </p>
+
+      <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        <a
+          href="/"
+          class="inline-block rounded-full bg-copper px-8 py-3.5 font-semibold text-cream hover:bg-copper-dark transition-colors"
+        >
+          Strona główna
+        </a>
+        <a
+          href="/uslugi"
+          class="inline-block rounded-full border border-graphite/20 px-8 py-3.5 font-semibold text-graphite hover:border-graphite/40 transition-colors"
+        >
+          Zobacz cennik
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

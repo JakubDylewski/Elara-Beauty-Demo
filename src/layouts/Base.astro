@@ -6,6 +6,7 @@ import FloatingBookButton from "../components/FloatingBookButton.astro";
 import MotionController from "../components/MotionController.astro";
 import RevealController from "../components/RevealController.astro";
 import MotionThread from "../components/MotionThread.astro";
+import DemoNoticeModal from "../components/DemoNoticeModal.astro";
 
 interface Props {
   title: string;
@@ -20,6 +21,9 @@ const {
   jsonLd,
   robots,
 } = Astro.props;
+
+const pageTitle = `${title} · ELARA Instytut Urody`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -28,14 +32,28 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
-    <title>{title} · ELARA Instytut Urody</title>
+    <title>{pageTitle}</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ELARA Instytut Urody" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body class="flex min-h-screen flex-col">
     <MotionController />
     <RevealController />
+    <DemoNoticeModal />
     <Header />
     <div class="relative isolate flex-1" id="page-thread-wrapper">
       <MotionThread />
