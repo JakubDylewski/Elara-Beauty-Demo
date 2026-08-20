@@ -508,3 +508,121 @@ Dla jasności — te sekcje NIE dostają ruchu bocznego:
 ---
 
 *Sekcja 13 — rozstępujące się sekcje. Ten sam gest co hero, powtórzony trzykrotnie, buduje spójny charakter strony.*
+
+
+
+
+
+
+
+# ELARA — POPRAWKI MOBILNE + NAWIGACJA + STRONA „NASZE PACJENTKI"
+
+> Trzy grupy zmian w dwóch etapach. Etap 14: poprawki mobilne (ruch). Etap 15: nawigacja i nowa strona.
+
+---
+
+# ETAP 14 — POPRAWKI MOBILNE
+
+## 14A — NIĆ Z PAZNOKCIEM WIDOCZNA NA TELEFONIE
+
+**Problem:** na telefonie paznokieć jest przywiązany do pozycji w dokumencie; strona mobilna jest bardzo długa, więc paznokieć szybko wyjeżdża poza widoczny obszar — im dalej przewijasz, tym mniej go widać.
+
+**Rozwiązanie:** na mobile (<768px) paznokieć ma **trzymać się okolic środka ekranu** (ok. 40–60% wysokości viewportu) i wędrować po nici w miarę przewijania, zamiast być doklejonym do absolutnej pozycji w dokumencie.
+- Pozycja wzdłuż nici nadal odpowiada postępowi przewijania (0% góra → 100% dół).
+- Zmienia się tylko to, że paznokieć jest renderowany w widocznej, środkowej strefie ekranu — nie wypada poza kadr.
+- Nić (linia) pozostaje ciągła i zakotwiczona jak dotąd. Zgrubienie wędruje razem z paznokciem.
+- **Desktop bez zmian.**
+
+**Alternatywa awaryjna** (gdyby powyższe zbyt złożone): powiększyć paznokieć na mobile (~14×22px), pogrubić nić do 2px, ograniczyć pionowe „uciekanie" tak, by paznokieć nie oddalał się od środka ekranu bardziej niż o ~30% wysokości viewportu. Priorytet: paznokieć MUSI być widoczny podczas przewijania.
+
+## 14B — WJAZD KART Z NAPRZEMIENNYCH BOKÓW (zastępuje rozjeżdżanie na mobile)
+
+**Problem:** na telefonie rozjeżdżanie (translateX w bok) sprawia, że elementy wyjeżdżają poza wąski ekran — widać tylko połowę albo znikają.
+
+**Rozwiązanie:** na mobile (<768px) elementy **wjeżdżają z naprzemiennych boków i zostają** — odwrotność rozjeżdżania. Zamiast „są i uciekają" → „wjeżdżają i lądują".
+
+**Dotyczy trzech sekcji:** galeria prac (6), zespół (3), opinie (6). Pełna liczba elementów zachowana — nic nie znika.
+
+**Zachowanie (mobile <768px), gdy sekcja wchodzi na ekran:**
+- Elementy startują niewidoczne, schowane za bokiem: nieparzyste (1, 3, 5) za lewą krawędzią (`translateX(-100%)`), parzyste (2, 4, 6) za prawą (`translateX(+100%)`), wszystkie `opacity: 0`.
+- Gdy sekcja wchodzi w ekran, elementy **wjeżdżają po kolei, jeden za drugim**, naprzemiennie: 1. z lewej → 2. z prawej → 3. z lewej → 4. z prawej → 5. z lewej → 6. z prawej.
+- Każdy dojeżdża do swojej docelowej pozycji (`translateX(0)`, `opacity: 1`) i **zostaje**.
+- Opóźnienie ok. 120ms między kolejnymi elementami (widoczna sekwencja wjazdu). Animacja pojedynczego: ~500ms `ease-out`.
+- **Tylko raz** — po wjeździe element zostaje, nie odtwarza się przy przewijaniu w górę.
+- Wszystkie elementy lądują w kadrze — zero wyjeżdżania poza ekran, zero poziomego scrolla.
+- Układ siatek bez zmian (galeria/opinie 6, zespół 3).
+
+**Zespół (3 karty) na mobile:** 1. z lewej → 2. z prawej → 3. z lewej (środkowa z prawej — naprzemiennie jak reszta).
+
+**Desktop (≥768px):** bez zmian — rozjeżdżanie na boki zostaje.
+
+**Przełączanie:** ruch boczny scroll-linked (rozjeżdżanie) aktywny tylko ≥768px; poniżej — wjazd z boków. Spójne z resztą progów mobilnych.
+
+## WYMOGI WSPÓLNE (14)
+- `prefers-reduced-motion: reduce` → elementy widoczne od razu na miejscu, paznokieć nieruchomy ale widoczny.
+- Zero przewijania poziomego na żadnej szerokości.
+- Wspólny nasłuch scrolla, `requestAnimationFrame`, `transform`/`opacity` only.
+- Lighthouse mobile Performance ≥90.
+
+**ETAP 14:** wykonaj 14A (paznokieć trzyma się środka ekranu na mobile) i 14B (na mobile trzy sekcje — galeria, zespół, opinie — wjeżdżają z naprzemiennych boków po kolei i zostają, zamiast rozjeżdżania). Desktop bez zmian. Zweryfikuj na 360/390/414px: paznokieć widoczny, karty wjeżdżają i zostają w kadrze, zero poziomego scrolla. Build, Lighthouse mobile, podsumuj. STOP.
+
+---
+
+# ETAP 15 — NAWIGACJA + STRONA „NASZE PACJENTKI"
+
+## 15A — ZAKŁADKA „STRONA GŁÓWNA" W MENU
+
+**Powód:** nie każdy wie, że kliknięcie w logo wraca na stronę główną (szczególnie starsi użytkownicy). Wyraźna zakładka to usuwa.
+
+- Dodać pozycję `Strona główna` → `/` jako **pierwszą pozycję** w menu (lewa strona listy, przed „Usługi").
+- Widoczna na desktopie i w menu mobilnym (hamburger).
+- Logo nadal klikalne (zostaje) — zakładka to dodatek, nie zamiennik.
+
+## 15B — PŁYWAJĄCY PRZYCISK „STRONA GŁÓWNA" (tylko desktop)
+
+- Lewy dolny róg, `position: fixed`. Wielkość i styl jak przycisk `Zarezerwuj` z górnego paska (spójność).
+- Tekst: `Strona główna` (lub `↑ Strona główna`). Link → `/`.
+- **Delikatne „oddychanie":** bardzo subtelny, ciągły ruch — nieduże kołysanie w zakresie **max 3–4px** w każdą stronę, powolne (cykl ~4s), płynne (`ease-in-out`). Ma „żyć", NIE latać po ekranie.
+- **Tylko desktop (≥768px).** Na telefonie NIE pokazywać — tam jest zakładka w menu, a dwa pływające przyciski (ten + „Zarezerwuj") zasłaniałyby dolne rogi ekranu.
+- **Nie może niczego zasłaniać:** trzymać z dala od treści; na stronach z ważną treścią w lewym dolnym rogu (formularz /kontakt) sprawdzić, że nie nachodzi. Jeśli koliduje — chować przy dolnej stopce.
+- Ukryty na samej stronie głównej (`/`) — nie ma sensu prowadzić tam, gdzie już jesteś.
+- `prefers-reduced-motion: reduce` → przycisk zostaje, ale bez oddychania (statyczny).
+
+## 15C — STRONA „NASZE PACJENTKI" (`/nasze-pacjentki`)
+
+**Powód (marketingowy):** starsza klientka może się obawiać, że salon jest „dla samych młodych". Pokazanie pełnego spektrum wiekowego klientek rozbraja tę obawę i mówi „tu jest miejsce dla ciebie, niezależnie od wieku".
+
+- Nowa pozycja w menu: `Nasze pacjentki` → `/nasze-pacjentki` (między „Zespół" a „O nas", albo po „O nas").
+- **Nagłówek:** H1 `Nasze klientki` · lead: `Do ELARY przychodzą kobiety w każdym wieku — dwudziestolatki przed weselem koleżanki, mamy po pracy, i panie, które od lat dbają o siebie z przyjemnością. Zobacz, kto u nas bywa.`
+- **Sekcja opinii z pełnym spektrum wieku** — 8 opinii (fikcyjne), format Google (gwiazdki, treść, imię + wiek, `opinia Google`), świadomie ułożone tak, by pokazać różnorodność:
+  - `Elżbieta, 81 lat` — o regularnej pielęgnacji dłoni i tym, że czuje się zaopiekowana
+  - `Stanisława, 74 lata` — o tym, że bała się, że to „nie dla niej", a jest zachwycona
+  - `Halina, 68 lat` — o laminacji brwi, że wreszcie nie musi ich malować
+  - `Maria, 59 lat` — o masażu i chwili dla siebie po pracy
+  - `Magdalena, 47 lat` — o regularnych wizytach co miesiąc
+  - `Joanna, 41 lat` — o przygotowaniu do ważnej okazji
+  - `Kasia, 34 lata` — o hybrydzie i rzęsach
+  - `Ola, 26 lat` — o wieczorze panieńskim z koleżankami
+- **Blok wzmacniający:** krótka sekcja „U nas liczy się każda", tekst w duchu: `Nie robimy różnicy między dwudziestką a osiemdziesiątką. Każda wychodzi zadbana, w swoim tempie, bez pośpiechu.`
+- CTA: `Zarezerwuj wizytę` + telefon.
+- Spójne z resztą (nić przechodzi, paleta, Fraunces/Figtree).
+
+## 15D — NOTATKA WDROŻENIOWA RODO (w komentarzu w kodzie strony)
+
+Na górze pliku `/nasze-pacjentki`, w komentarzu HTML — instrukcja dla przyszłego wdrożenia u prawdziwego klienta:
+
+```
+<!-- UWAGA WDROŻENIOWA (RODO): W DEMO opinie i wiek są fikcyjne.
+     Przy wdrożeniu u prawdziwego salonu: imię + wiek + treść opinii to dane
+     osobowe. Publikacja wymaga WYRAŹNEJ ZGODY pacjentki na publikację właśnie
+     tych danych (w tym wieku). Bez zgody — ryzyko skargi do UODO.
+     Bezpieczna alternatywa bez dokładnego wieku: przedział lub opis zamiast
+     liczby ("po siedemdziesiątce", "emerytka", "40+"). Przekaz (różnorodność
+     wiekowa) zostaje, a nie jest to precyzyjna dana osobowa. -->
+```
+
+**ETAP 15:** wykonaj 15A (zakładka „Strona główna" jako pierwsza pozycja menu, desktop + mobile), 15B (pływający przycisk „Strona główna" w lewym dolnym rogu, delikatne oddychanie max 3-4px, TYLKO desktop, ukryty na `/`, nie zasłania treści), 15C (strona `/nasze-pacjentki` z 8 opiniami w pełnym spektrum wieku wg listy, pozycja w menu), 15D (notatka RODO w komentarzu). Build, podsumuj, STOP.
+
+---
+
+*Etapy 14-15 — czytelność mobilna, dostępna nawigacja dla wszystkich grup wiekowych, strona budująca zaufanie starszych klientek. Wiek w opiniach: w demo fikcyjny; dla klienta — notatka RODO.*

@@ -13,7 +13,7 @@ const preview = team.slice(0, 3);
     <div class="mt-10 grid gap-6 sm:grid-cols-3">
       {preview.map((member, index) => (
         <div class="text-center" data-cascade style={`transition-delay: ${index * 80}ms`}>
-          <div data-team-card data-index={index}>
+          <div data-team-card data-index={index} style={`transition-delay: ${index * 120}ms`}>
             <ImagePlaceholder label={member.name} aspect="aspect-[4/5]" tone="blush" />
             <p class="mt-4 font-serif text-lg font-semibold text-graphite">{member.name}</p>
             <p class="text-sm text-graphite-soft">{member.specialization}</p>
@@ -31,7 +31,7 @@ const preview = team.slice(0, 3);
 </section>
 
 <style>
-  @media (max-width: 639px) {
+  @media (max-width: 767px) {
     [data-team-section] [data-cascade] {
       opacity: 1;
       transform: none;
@@ -40,24 +40,24 @@ const preview = team.slice(0, 3);
 
     [data-team-card] {
       opacity: 0;
-      transition: opacity 450ms ease-out, transform 450ms ease-out;
+      transition: opacity 500ms ease-out, transform 500ms ease-out;
     }
 
-    [data-team-card][data-index="0"] {
-      transform: translate3d(-60px, 0, 0);
+    /* 14B: uniform left/right alternation — 1 left, 2 right, 3 left — the
+       middle card no longer gets the special "from below" treatment it had
+       under 13.3's mobile fallback. */
+    [data-team-card][data-index="0"],
+    [data-team-card][data-index="2"] {
+      transform: translateX(-100%);
     }
 
     [data-team-card][data-index="1"] {
-      transform: translate3d(0, 60px, 0);
-    }
-
-    [data-team-card][data-index="2"] {
-      transform: translate3d(60px, 0, 0);
+      transform: translateX(100%);
     }
 
     [data-cascade].is-visible [data-team-card] {
       opacity: 1;
-      transform: translate3d(0, 0, 0);
+      transform: translateX(0);
     }
   }
 
@@ -75,7 +75,7 @@ const preview = team.slice(0, 3);
   const cards = Array.from(document.querySelectorAll("[data-team-card]"));
 
   if (section instanceof HTMLElement && cards.length > 0) {
-    const desktopQuery = window.matchMedia("(min-width: 640px)");
+    const desktopQuery = window.matchMedia("(min-width: 768px)");
     let inView = false;
 
     const observer = new IntersectionObserver(

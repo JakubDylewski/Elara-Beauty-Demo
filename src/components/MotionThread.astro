@@ -36,13 +36,16 @@
   ) {
     const WINDOW_LEN = 140;
     const TANGENT_EPSILON = 2;
+    const MOBILE_QUERY = "(max-width: 767px)";
     let totalLength = 0;
-    let lastProgress = 0;
+    let pathHeight = 0;
+    let lastScrollY = 0;
 
     function buildPath() {
-      const mobile = window.matchMedia("(max-width: 767px)").matches;
+      const mobile = window.matchMedia(MOBILE_QUERY).matches;
       const width = Math.max(wrapper.clientWidth, 1);
       const height = Math.max(wrapper.scrollHeight, 1);
+      pathHeight = height;
 
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
@@ -82,10 +85,24 @@
       thickPath.setAttribute("stroke-dasharray", `${WINDOW_LEN} ${Math.max(totalLength - WINDOW_LEN, 0)}`);
     }
 
-    function setProgress(progress) {
+    function setProgress(scrollY) {
       if (!totalLength) return;
-      const clamped = Math.min(Math.max(progress, 0), 1);
-      const len = clamped * totalLength;
+
+      let len;
+      if (window.matchMedia(MOBILE_QUERY).matches) {
+        // 14A: on mobile the nail tracks the vertical center of the current
+        // viewport (not a fixed document position), so it never scrolls out
+        // of frame on the very long mobile page. It still rides the same
+        // path — only which point along it we pick changes.
+        const targetY = scrollY + window.innerHeight * 0.5;
+        const yFraction = Math.min(Math.max(targetY / pathHeight, 0), 1);
+        len = yFraction * totalLength;
+      } else {
+        const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+        const progress = Math.min(Math.max(scrollY / max, 0), 1);
+        len = progress * totalLength;
+      }
+
       const point = linePath.getPointAtLength(len);
 
       const aheadLen = Math.min(len + TANGENT_EPSILON, totalLength);
@@ -112,20 +129,19 @@
 
     const resizeObserver = new ResizeObserver(() => {
       buildPath();
-      setProgress(lastProgress);
+      setProgress(lastScrollY);
     });
     resizeObserver.observe(wrapper);
 
     window.addEventListener("load", () => {
       buildPath();
-      setProgress(lastProgress);
+      setProgress(lastScrollY);
     });
 
     if (!reducedMotion) {
       window.elaraMotion?.register(({ scrollY }) => {
-        const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
-        lastProgress = scrollY / max;
-        setProgress(lastProgress);
+        lastScrollY = scrollY;
+        setProgress(lastScrollY);
       });
     }
   }

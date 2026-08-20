@@ -10,7 +10,12 @@ import { testimonials } from "../../data/testimonials";
     <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {testimonials.map((review, index) => (
         <div data-cascade style={`transition-delay: ${Math.min(index * 80, 480)}ms`}>
-          <div class="rounded-2xl bg-cream p-6" data-testimonial-item data-index={index}>
+          <div
+            class="rounded-2xl bg-cream p-6"
+            data-testimonial-item
+            data-index={index}
+            style={`transition-delay: ${index * 120}ms`}
+          >
             <div class="text-copper" aria-hidden="true">{"★".repeat(review.stars)}</div>
             <p class="mt-3 text-sm text-graphite">{review.text}</p>
             <p class="mt-4 text-sm font-semibold text-graphite">{review.name}</p>
@@ -22,19 +27,60 @@ import { testimonials } from "../../data/testimonials";
   </div>
 </section>
 
+<style>
+  /* 14B — mobile: alternating side entrance replaces the scroll-linked diverge. */
+  @media (max-width: 767px) {
+    [data-testimonials-section] [data-cascade] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    [data-testimonial-item] {
+      opacity: 0;
+      transition: opacity 500ms ease-out, transform 500ms ease-out;
+    }
+
+    [data-testimonial-item][data-index="0"],
+    [data-testimonial-item][data-index="2"],
+    [data-testimonial-item][data-index="4"] {
+      transform: translateX(-100%);
+    }
+
+    [data-testimonial-item][data-index="1"],
+    [data-testimonial-item][data-index="3"],
+    [data-testimonial-item][data-index="5"] {
+      transform: translateX(100%);
+    }
+
+    [data-cascade].is-visible [data-testimonial-item] {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-testimonial-item] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
 <script>
   const section = document.querySelector("[data-testimonials-section]");
   const items = Array.from(document.querySelectorAll("[data-testimonial-item]"));
 
   if (section instanceof HTMLElement && items.length > 0) {
-    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const desktopQuery = window.matchMedia("(min-width: 768px)");
     let inView = false;
 
     const observer = new IntersectionObserver(
       (entries) => {
         inView = entries[0]?.isIntersecting ?? false;
         items.forEach((el) => {
-          if (el instanceof HTMLElement) el.style.willChange = inView ? "transform" : "";
+          if (el instanceof HTMLElement) el.style.willChange = inView && desktopQuery.matches ? "transform" : "";
         });
       },
       { rootMargin: "50% 0px 50% 0px" }
@@ -50,18 +96,23 @@ import { testimonials } from "../../data/testimonials";
         });
         return;
       }
+      if (!desktopQuery.matches) {
+        items.forEach((el) => {
+          if (el instanceof HTMLElement && el.style.transform) el.style.transform = "";
+        });
+        return;
+      }
       if (!inView) return;
 
       const rect = section.getBoundingClientRect();
       const ih = window.innerHeight;
       const p = Math.min(1, Math.max(0, (ih * 0.85 - rect.top) / (ih * 0.5)));
-      const distance = desktopQuery.matches ? 160 : 90;
 
       items.forEach((el) => {
         if (!(el instanceof HTMLElement)) return;
         const index = Number(el.dataset.index);
         const dir = index < 3 ? -1 : 1;
-        el.style.transform = `translate3d(${dir * distance * p}px, 0, 0)`;
+        el.style.transform = `translate3d(${dir * 160 * p}px, 0, 0)`;
       });
     });
   }
