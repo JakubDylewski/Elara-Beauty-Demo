@@ -46,8 +46,12 @@
 
       svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
 
-      const amplitude = width * (mobile ? 0.08 : 0.12);
-      const wavelength = window.innerHeight * 0.9;
+      const amplitude = width * (mobile ? 0.06 : 0.12);
+      // Mobile content is single-column and near-edge-to-edge, so the thread's
+      // center-crossing points otherwise land on nearly every stacked heading.
+      // A longer wavelength spreads those crossings out so it doesn't read as
+      // "checking off" each list item in a row.
+      const wavelength = window.innerHeight * (mobile ? 1.6 : 0.9);
       const halfWave = Math.max(wavelength / 2, 1);
       const centerX = width / 2;
 

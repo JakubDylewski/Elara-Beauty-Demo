@@ -53,7 +53,7 @@ const items = services.filter((service) => service.categorySlug === category.slu
               <p class="font-serif text-lg font-semibold text-copper-dark">{service.price} zł</p>
               <a
                 href={`/kontakt?usluga=${encodeURIComponent(service.name)}`}
-                class="rounded-full bg-copper px-4 py-2 text-sm font-semibold text-cream hover:bg-copper-dark transition-colors"
+                class="rounded-full bg-copper-dark px-4 py-2 text-sm font-semibold text-cream hover:bg-copper transition-colors"
               >
                 Rezerwuj
               </a>
@@ -97,7 +97,7 @@ const items = services.filter((service) => service.categorySlug === category.slu
       <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">Umów się na {category.name.toLowerCase()}</h2>
       <a
         href="/kontakt"
-        class="mt-6 inline-block rounded-full bg-copper px-8 py-4 font-semibold text-cream hover:bg-copper-dark transition-colors"
+        class="mt-6 inline-block rounded-full bg-copper-dark px-8 py-4 font-semibold text-cream hover:bg-copper transition-colors"
       >
         Zarezerwuj wizytę
       </a>

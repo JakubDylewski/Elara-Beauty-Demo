@@ -8,6 +8,14 @@ import RevealController from "../components/RevealController.astro";
 import MotionThread from "../components/MotionThread.astro";
 import DemoNoticeModal from "../components/DemoNoticeModal.astro";
 
+// Preloaded so the swap from fallback to webfont happens before large text
+// blocks (e.g. the full price list on /uslugi) finish laying out — avoids the
+// cumulative layout shift a late font swap causes on text-heavy pages.
+import figtreeRegularLatin from "@fontsource/figtree/files/figtree-latin-400-normal.woff2?url";
+import figtreeRegularLatinExt from "@fontsource/figtree/files/figtree-latin-ext-400-normal.woff2?url";
+import frauncesSemiboldLatin from "@fontsource/fraunces/files/fraunces-latin-600-normal.woff2?url";
+import frauncesSemiboldLatinExt from "@fontsource/fraunces/files/fraunces-latin-ext-600-normal.woff2?url";
+
 interface Props {
   title: string;
   description?: string;
@@ -33,6 +41,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="preload" as="font" type="font/woff2" href={figtreeRegularLatin} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={figtreeRegularLatinExt} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={frauncesSemiboldLatin} crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href={frauncesSemiboldLatinExt} crossorigin="anonymous" />
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
     <title>{pageTitle}</title>
