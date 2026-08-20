@@ -1,0 +1,189 @@
+---
+import Base from "../../layouts/Base.astro";
+import DotLine from "../../components/DotLine.astro";
+
+const workingLayers = [
+  {
+    number: "1",
+    title: "Cennik z filtrem na żywo",
+    text: "Klientka wpisuje „hybryda” i w 5 sekund widzi cenę, czas trwania i przycisk rezerwacji — bez dzwonienia, bez czekania na odpowiedź.",
+    href: "/uslugi",
+    cta: "Zobacz cennik →",
+  },
+  {
+    number: "2",
+    title: "Rezerwacja z kontekstem",
+    text: "Formularz wie, z jakiej usługi klientka przyszła, i prewypełnia się sam — recepcja dostaje gotowe zgłoszenie zamiast pustego „chcę się umówić”.",
+    href: "/kontakt?usluga=Manicure+hybrydowy",
+    cta: "Zobacz jak działa →",
+  },
+  {
+    number: "3",
+    title: "Promocje podmieniane w 2 minuty",
+    text: "Nowa oferta miesiąca? Zmiana jednej linijki w danych strony — bez dewelopera, bez czekania na wycenę drobnej poprawki.",
+    href: "/promocje",
+    cta: "Zobacz aktualne promocje →",
+  },
+  {
+    number: "4",
+    title: "Vouchery i pakiety",
+    text: "Drugi strumień przychodu, który sprzedaje się sam o dowolnej porze — bez telefonu do salonu w Wigilię po prezent w ostatniej chwili.",
+    href: "/vouchery",
+    cta: "Zobacz ofertę voucherów →",
+  },
+  {
+    number: "5",
+    title: "Lądowiska SEO na dzielnice i miasta",
+    text: "Osobne, lekkie strony na „salon beauty [dzielnica]” — żeby wyszukiwarka znalazła Cię lokalnie, zanim klientka w ogóle pomyśli o konkurencji.",
+    href: "/beauty-gdynia-centrum",
+    cta: "Zobacz przykładową stronę →",
+  },
+];
+
+const reportMetrics = [
+  { label: "Zgłoszenia przez formularz", value: "47" },
+  { label: "Nowe klientki", value: "15" },
+  { label: "Najczęściej rezerwowana usługa", value: "Manicure hybrydowy" },
+  { label: "Współczynnik konwersji cennika", value: "34%" },
+];
+---
+
+<Base
+  title="Jak pozyskujemy klientki"
+  description="System pozyskiwania klientek dla salonów i instytutów urody — cennik z filtrem, rezerwacja z kontekstem, promocje, vouchery i lądowiska SEO. Bez prowizji od rezerwacji."
+>
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 sm:py-16">
+      <DotLine class="justify-center" />
+      <p class="mt-4 text-sm font-medium uppercase tracking-widest text-graphite-soft">
+        Dla właścicielek salonów i instytutów urody
+      </p>
+      <h1 class="mt-4 font-serif text-4xl font-semibold leading-tight text-graphite sm:text-5xl">
+        Nie budujemy stron. Budujemy grafik pełny rezerwacji.
+      </h1>
+      <p class="mx-auto mt-4 max-w-xl text-graphite-soft">
+        Ta strona, na której właśnie jesteś, to nie makieta z placeholderami tekstu. To działający system — każda z
+        poniższych warstw jest podpięta i możesz ją kliknąć.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">System, który działa dziś</h2>
+      <div class="mt-10 space-y-4">
+        {workingLayers.map((layer) => (
+          <a
+            href={layer.href}
+            class="group flex flex-col gap-4 rounded-2xl bg-cream p-6 transition-colors hover:bg-cream/80 sm:flex-row sm:items-center sm:gap-6"
+          >
+            <span
+              class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-graphite/5 font-serif text-lg font-semibold text-graphite"
+              aria-hidden="true"
+            >
+              {layer.number}
+            </span>
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2.5">
+                <p class="font-serif text-xl font-semibold text-graphite">{layer.title}</p>
+                <span class="rounded-full bg-copper px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-cream">
+                  Działa
+                </span>
+              </div>
+              <p class="mt-1.5 text-graphite-soft">{layer.text}</p>
+              <span class="mt-2 inline-block text-sm font-semibold text-copper-dark group-hover:text-copper transition-colors">
+                {layer.cta}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="text-center font-serif text-3xl font-semibold text-graphite sm:text-4xl">
+        Co jeszcze dokładamy do systemu
+      </h2>
+      <p class="mx-auto mt-3 max-w-xl text-center text-graphite-soft">
+        Te dwa elementy pokazujemy jako makiety — bez podpiętych kont zewnętrznych, ale dokładnie w takim kształcie,
+        w jakim wdrażamy je u klientek.
+      </p>
+
+      <div class="mt-10 grid gap-6 sm:grid-cols-2">
+        <div class="rounded-2xl border border-graphite/10 bg-blush/40 p-6">
+          <div class="flex items-center justify-between gap-3">
+            <p class="font-serif text-xl font-semibold text-graphite">Wizytówka w wyszukiwarce</p>
+            <span class="shrink-0 rounded-full border border-graphite/20 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-graphite-soft">
+              Przykład
+            </span>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-cream p-4">
+            <p class="font-serif text-lg font-semibold text-graphite">ELARA — Instytut Urody</p>
+            <p class="text-sm text-graphite-soft">Salon kosmetyczny · Świętojańska 82, Gdynia</p>
+            <p class="mt-2 text-sm text-copper" aria-hidden="true">★★★★★ <span class="text-graphite">4,9 (380 opinii)</span></p>
+            <p class="mt-2 text-sm text-graphite-soft">Otwarte teraz · Zamyka o 20:00</p>
+          </div>
+          <p class="mt-3 text-sm text-graphite-soft">
+            Uzupełniony profil, aktualne godziny i odpowiadanie na opinie — to też część systemu pozyskiwania.
+          </p>
+        </div>
+
+        <div class="rounded-2xl border border-graphite/10 bg-blush/40 p-6">
+          <div class="flex items-center justify-between gap-3">
+            <p class="font-serif text-xl font-semibold text-graphite">Raport miesięczny</p>
+            <span class="shrink-0 rounded-full border border-graphite/20 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-graphite-soft">
+              Przykład
+            </span>
+          </div>
+
+          <div class="mt-4 space-y-2.5 rounded-xl bg-cream p-4">
+            {reportMetrics.map((metric) => (
+              <div class="flex items-center justify-between gap-3 text-sm">
+                <span class="text-graphite-soft">{metric.label}</span>
+                <span class="font-semibold text-graphite">{metric.value}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-3 text-xs font-semibold uppercase tracking-wide text-graphite-soft">
+            Przykładowy raport — dane demonstracyjne
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+      <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">0% prowizji od rezerwacji</h2>
+      <p class="mx-auto mt-4 max-w-xl text-graphite-soft">
+        Każda rezerwacja przez własną stronę trafia bezpośrednio do Ciebie — bez prowizji dla pośredników. Korzystasz
+        z Booksy? Możesz wpiąć widżet równolegle: własny kanał + Booksy, nie zamiast.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+      <h2 class="font-serif text-3xl font-semibold text-graphite sm:text-4xl">Prowadzisz salon lub instytut urody?</h2>
+      <p class="mx-auto mt-3 max-w-lg text-graphite-soft">
+        Taką stronę — wraz z systemem pozyskiwania klientek — zbudujemy również dla Ciebie.
+      </p>
+      <a
+        href="https://connectiva-website.pages.dev"
+        target="_blank"
+        rel="noopener"
+        class="mt-6 inline-block rounded-full bg-copper px-8 py-4 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        Chcę taki system
+      </a>
+    </div>
+  </section>
+</Base>
