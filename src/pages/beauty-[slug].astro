@@ -1,0 +1,124 @@
+---
+import Base from "../layouts/Base.astro";
+import DotLine from "../components/DotLine.astro";
+import { cities } from "../data/cities";
+import { categories } from "../data/categories";
+
+export function getStaticPaths() {
+  return cities.map((city) => ({
+    params: { slug: city.slug },
+    props: { city },
+  }));
+}
+
+const { city } = Astro.props;
+const otherCities = cities.filter((c) => c.slug !== city.slug);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  name: "ELARA — Instytut Urody",
+  telephone: "+48512340219",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "ul. Świętojańska 82",
+    addressLocality: "Gdynia",
+    postalCode: "81-401",
+    addressCountry: "PL",
+  },
+  areaServed: {
+    "@type": "Place",
+    name: city.name,
+  },
+  url: `https://elara-beauty-demo.pages.dev/beauty-${city.slug}`,
+};
+---
+
+<Base title={`Salon beauty ${city.name}`} description={city.metaDescription} robots="index, follow" jsonLd={jsonLd}>
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-16">
+      <nav class="text-sm text-graphite-soft" aria-label="Okruszki">
+        <a href="/" class="hover:text-copper-dark transition-colors">Strona główna</a>
+        <span class="mx-2">/</span>
+        <span class="text-graphite">Salon beauty {city.name}</span>
+      </nav>
+
+      <DotLine class="mt-6" />
+      <h1 class="mt-4 font-serif text-4xl font-semibold text-graphite sm:text-5xl">Salon beauty {city.name}</h1>
+
+      <p class="mt-5 text-lg text-graphite-soft">{city.lead}</p>
+      <p class="mt-3 text-graphite-soft">
+        Nasz instytut mieści się w Gdyni przy ul. Świętojańskiej — klientki z {city.genitive} dojeżdżają do nas w ok.{" "}
+        {city.travelMinutes} minut.
+      </p>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <p class="text-graphite-soft">
+        ELARA to instytut urody w Gdyni, w którym paznokcie, rzęsy i brwi, pielęgnacja twarzy, depilacja, masaże i
+        makijaż odbywają się pod jednym dachem. Zespół sześciu specjalistek pracuje na markach premium, w ciepłej,
+        kameralnej atmosferze — bez pośpiechu i bez klinicznego chłodu.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        {categories.map((category) => (
+          <a
+            href={`/uslugi/${category.slug}`}
+            class="rounded-full border border-graphite/15 bg-cream px-4 py-2 text-sm font-medium text-graphite hover:border-copper/40 hover:text-copper-dark transition-colors"
+          >
+            {category.name}
+          </a>
+        ))}
+      </div>
+
+      <a
+        href="/"
+        class="mt-8 inline-block rounded-full bg-copper px-8 py-3.5 font-semibold text-cream hover:bg-copper-dark transition-colors"
+      >
+        Zobacz pełną ofertę →
+      </a>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-cream" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="font-serif text-2xl font-semibold text-graphite sm:text-3xl">Gdzie nas znajdziesz</h2>
+      <p class="mt-2 text-graphite-soft">
+        ul. Świętojańska 82, 81-401 Gdynia · <a href="tel:+48512340219" class="font-medium text-copper-dark hover:text-copper transition-colors">512 340 219</a>
+      </p>
+      <div class="mt-6 overflow-hidden rounded-xl border border-graphite/10">
+        <iframe
+          title="Mapa — Gdynia, ul. Świętojańska"
+          src="https://www.google.com/maps?q=ul.+%C5%9Awi%C4%99toja%C5%84ska,+Gdynia&output=embed"
+          width="100%"
+          height="260"
+          style="border:0; display:block;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="relative">
+    <div class="thread-section-bg bg-blush" aria-hidden="true"></div>
+    <div class="relative z-10 mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+      <h2 class="font-serif text-2xl font-semibold text-graphite sm:text-3xl">Dojeżdżamy też z innych okolic</h2>
+      <div class="mt-6 flex flex-wrap gap-3">
+        {otherCities.map((other) => (
+          <a
+            href={`/beauty-${other.slug}`}
+            class="rounded-full border border-graphite/15 bg-cream px-4 py-2 text-sm font-medium text-graphite hover:border-copper/40 hover:text-copper-dark transition-colors"
+          >
+            {other.name}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
